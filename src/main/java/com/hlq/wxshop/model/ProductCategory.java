@@ -45,8 +45,10 @@ public class ProductCategory {
 
     private Date updateTime;
 
+
     public ProductCategory() {
     }
+
 
     public ProductCategory(String categoryName, Integer categoryType, String categoryIco, Date createTime, Date updateTime) {
         this.categoryName = categoryName;
@@ -56,15 +58,4 @@ public class ProductCategory {
         this.updateTime = updateTime;
     }
 
-    @Override
-    public String toString() {
-        return "ProductCategory{" +
-                "categoryId=" + categoryId +
-                ", categoryName='" + categoryName + '\'' +
-                ", categoryType=" + categoryType +
-                ", categoryIco='" + categoryIco + '\'' +
-                ", createTime=" + createTime +
-                ", updateTime=" + updateTime +
-                '}';
-    }
 }
