@@ -48,4 +48,12 @@ public class ProductInfoDaoTest {
         Assert.assertNotEquals(0,product.size());
 
     }
+
+    @Test
+    public void findByCategoryTypeIn(){
+        List<ProductInfo> product = dao.findByCategoryTypeIn(1002);
+        Assert.assertNotEquals(0,product.size());
+
+    }
+
 }

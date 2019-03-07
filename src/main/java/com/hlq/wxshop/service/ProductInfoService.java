@@ -21,6 +21,14 @@ public interface ProductInfoService {
    List<ProductInfo> findOnAll();
 
     /**
+     * 根据类目查询商品
+     * @param categoryType
+     * @return
+     */
+   List<ProductInfo> findByCategoryTypeIn(Integer categoryType);
+
+
+    /**
      * 查询商品列表 分页
      * @param pageable
      * @return

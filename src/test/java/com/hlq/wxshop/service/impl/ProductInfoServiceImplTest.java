@@ -41,6 +41,12 @@ public class ProductInfoServiceImplTest {
     }
 
     @Test
+    public void findByCategoryTypeIn() {
+        List<ProductInfo> list = service.findByCategoryTypeIn(1002);
+        Assert.assertNotEquals(0,list.size());
+    }
+
+    @Test
     public void findAll() {
         PageRequest pageRequest = new PageRequest(0, 2);
         Page<ProductInfo> page = service.findAll(pageRequest);

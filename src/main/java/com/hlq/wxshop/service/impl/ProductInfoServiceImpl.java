@@ -18,11 +18,18 @@ import java.util.List;
 @Service
 public class ProductInfoServiceImpl implements ProductInfoService {
 
+
     @Autowired
     private ProductInfoDao dao;
+
     @Override
     public ProductInfo findOne(String productId) {
         return dao.findOne(productId);
+    }
+
+    @Override
+    public List<ProductInfo> findByCategoryTypeIn(Integer categoryType) {
+        return dao.findByCategoryTypeIn(categoryType);
     }
 
     @Override
