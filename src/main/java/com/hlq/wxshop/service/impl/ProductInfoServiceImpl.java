@@ -1,13 +1,17 @@
 package com.hlq.wxshop.service.impl;
 
 import com.hlq.wxshop.dao.ProductInfoDao;
+import com.hlq.wxshop.dto.CartDTO;
 import com.hlq.wxshop.enums.ProductStatusEnum;
+import com.hlq.wxshop.enums.ResultEnum;
+import com.hlq.wxshop.exception.SellException;
 import com.hlq.wxshop.model.ProductInfo;
 import com.hlq.wxshop.service.ProductInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -17,7 +21,6 @@ import java.util.List;
  */
 @Service
 public class ProductInfoServiceImpl implements ProductInfoService {
-
 
     @Autowired
     private ProductInfoDao dao;
@@ -45,5 +48,27 @@ public class ProductInfoServiceImpl implements ProductInfoService {
     @Override
     public ProductInfo save(ProductInfo productInfo) {
         return dao.save(productInfo);
+    }
+
+    @Override
+    public void addStock(List<CartDTO> cartDTOList) {
+
+    }
+
+    @Override
+    @Transactional(rollbackFor =Exception.class )
+    public void decStock(List<CartDTO> cartDTOList) {
+        for(CartDTO cartDTO:cartDTOList){
+            ProductInfo info = dao.findOne(cartDTO.getProductId());
+            if(info == null){
+                throw new SellException(ResultEnum.PRODUCT_NOT_EXIST);
+            }
+            Integer result = info.getProductStatus() - cartDTO.getProductQuantity();
+            if(result<0){
+                throw new SellException(ResultEnum.PRODUCT_STOCK_ERROR);
+            }
+            info.setProductStock(result);
+            dao.save(info);
+        }
     }
 }

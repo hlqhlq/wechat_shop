@@ -1,5 +1,6 @@
 package com.hlq.wxshop.service;
 
+import com.hlq.wxshop.dto.CartDTO;
 import com.hlq.wxshop.model.ProductInfo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,16 +27,29 @@ public interface ProductInfoService {
      * @return
      */
    List<ProductInfo> findByCategoryTypeIn(Integer categoryType);
-
-
     /**
      * 查询商品列表 分页
      * @param pageable
      * @return
      */
-   Page<ProductInfo> findAll(Pageable pageable);
+    Page<ProductInfo> findAll(Pageable pageable);
 
-   ProductInfo save(ProductInfo productInfo);
+    /**
+     * 保存商品
+     * @param productInfo
+     * @return
+     */
+    ProductInfo save(ProductInfo productInfo);
 
-   //加库存
+    /**
+     * 加库存
+     * @param cartDTOList
+     */
+    void addStock(List<CartDTO> cartDTOList);
+
+    /**
+     * 减库存
+     * @param cartDTOList
+     */
+    void decStock(List<CartDTO> cartDTOList);
 }
