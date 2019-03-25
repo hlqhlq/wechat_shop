@@ -11,3 +11,10 @@ spring:
 server:
   context-path: /wxshop
   port: 8080
+
+
+#自定义属性 微信appid,secret
+wechat:
+  appid: wxc095705554d9d1bf
+  secret: daa2eb9be070a810864b00593e0c1339
+  url: https://api.weixin.qq.com/sns/jscode2session
