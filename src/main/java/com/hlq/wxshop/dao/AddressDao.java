@@ -12,4 +12,6 @@ import java.util.List;
 public interface AddressDao extends JpaRepository<UserAddress,Integer> {
 
     List<UserAddress> findByOpenidIn(String openid);
+
+    UserAddress findByAddressDefaultEqualsAndOpenid(Integer code,String openid);
 }

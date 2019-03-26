@@ -36,4 +36,10 @@ public interface AddressService {
      */
     UserAddress findById(Integer id);
 
+    /**
+     * 查找设为默认的地址
+     * @return
+     */
+    UserAddress findByAddressDefaultEqualsAndOpenid(Integer code,String openid);
+
 }

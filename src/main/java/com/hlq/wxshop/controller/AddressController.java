@@ -27,7 +27,7 @@ public class AddressController {
     }
 
     /**
-     * 根据id跟新默认地址
+     * 根据id更新默认地址
      */
     @GetMapping("/update")
     public ResultVO updateAddress(Integer id,Integer isDefault,String openid){
@@ -54,5 +54,22 @@ public class AddressController {
     public ResultVO delete(Integer id){
         addressService.deleteById(id);
         return  ResultVOUtil.success();
+    }
+
+    @GetMapping("/findOne")
+    public ResultVO findOne(Integer id){
+        UserAddress address = addressService.findById(id);
+        return ResultVOUtil.success(address);
+    }
+
+    /**
+     * 查询登录用户的默认的地址，即addressDefault为1
+     * @return
+     */
+    @GetMapping("/findByDefault")
+    public ResultVO findByDefault(String openid){
+        UserAddress address = addressService.findByAddressDefaultEqualsAndOpenid
+                (AddressStatusEnum.isDefault.getCode(),openid);
+        return ResultVOUtil.success(address);
     }
 }

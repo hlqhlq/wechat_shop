@@ -1,6 +1,7 @@
 package com.hlq.wxshop.service.impl;
 
 import com.hlq.wxshop.dao.AddressDao;
+import com.hlq.wxshop.enums.AddressStatusEnum;
 import com.hlq.wxshop.model.UserAddress;
 import com.hlq.wxshop.service.AddressService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,12 @@ public class AddressServiceImpl implements AddressService{
     public UserAddress findById(Integer id) {
         return addressDao.findOne(id);
     }
+
+    @Override
+    public UserAddress findByAddressDefaultEqualsAndOpenid(Integer code, String openid) {
+        return addressDao.findByAddressDefaultEqualsAndOpenid(code,openid);
+    }
+
 
 
 
