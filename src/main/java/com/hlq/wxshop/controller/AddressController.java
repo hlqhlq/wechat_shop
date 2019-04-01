@@ -2,12 +2,17 @@ package com.hlq.wxshop.controller;
 
 import com.hlq.wxshop.VO.ResultVO;
 import com.hlq.wxshop.enums.AddressStatusEnum;
+import com.hlq.wxshop.enums.ResultEnum;
+import com.hlq.wxshop.exception.SellException;
 import com.hlq.wxshop.model.UserAddress;
 import com.hlq.wxshop.service.AddressService;
 import com.hlq.wxshop.utils.ResultVOUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -16,12 +21,17 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/wx/address")
+@Slf4j
 public class AddressController {
     @Autowired
     private AddressService addressService;
 
     @PostMapping("/save")
-    public ResultVO saveAddress(UserAddress userAddress){
+    public ResultVO saveAddress(@Valid UserAddress userAddress, BindingResult bindingResult){
+        if(bindingResult.hasErrors()){
+              log.error("【保存地址】参数不正确，userAddress={}",userAddress);
+              throw new SellException(ResultEnum.PARAM_ERROR);
+        }
         UserAddress address = addressService.save(userAddress);
         return ResultVOUtil.success(address);
     }
