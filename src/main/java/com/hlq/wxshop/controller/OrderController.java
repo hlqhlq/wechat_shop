@@ -7,6 +7,8 @@ import com.hlq.wxshop.utils.ResultVOUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * @Author:HLQ
  * @Date:2019/4/1 17:26
@@ -26,4 +28,12 @@ public class OrderController {
         OrderDTO result = orderService.create(orderDTO);
         return ResultVOUtil.success(result);
     }
+
+    @GetMapping("/findByPayStatus")
+    public ResultVO findByPayStatus(String openid,Integer status){
+        List<OrderDTO> list = orderService.findByBuyerOpenidAndAndPayStatus(openid,status);
+        return ResultVOUtil.success(list);
+    }
+
+
 }

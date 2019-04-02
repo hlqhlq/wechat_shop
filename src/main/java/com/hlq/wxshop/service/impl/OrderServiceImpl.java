@@ -14,6 +14,7 @@ import com.hlq.wxshop.model.OrderMaster;
 import com.hlq.wxshop.model.ProductInfo;
 import com.hlq.wxshop.service.OrderService;
 import com.hlq.wxshop.service.ProductInfoService;
+import com.hlq.wxshop.utils.DateFormatUtil;
 import com.hlq.wxshop.utils.KeyUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -41,6 +42,14 @@ import java.util.stream.Collectors;
 @Slf4j
 public class OrderServiceImpl implements OrderService {
 
+    /**
+     * 满20免运费
+     */
+    private final static  BigDecimal FREIGHT=new BigDecimal(20);
+    /**
+     * 运费10
+     */
+    private final static  BigDecimal PAYFREIGHT=new BigDecimal(10);
     @Autowired
     private ProductInfoService productInfoService;
 
@@ -56,6 +65,7 @@ public class OrderServiceImpl implements OrderService {
 
         String orderId=KeyUtil.UniqueKey();
         Date date = new Date();
+        String dateStr=DateFormatUtil.getCurrentTimeBySecond(date);
         BigDecimal orderAmount = new BigDecimal(BigInteger.ZERO);
 
         //1.查询商品（数量，价格）
@@ -68,18 +78,21 @@ public class OrderServiceImpl implements OrderService {
             orderAmount=info.getProductPrice().
                     multiply(new BigDecimal(orderDetail.getProductQuantity()))
                     .add(orderAmount);
-
             //订单详情入库
             orderDetail.setDetailId(KeyUtil.UniqueKey());
             orderDetail.setOrderId(orderId);
             //属性copy
             BeanUtils.copyProperties(info,orderDetail);
-            orderDetail.setCreateTime(date);
-            orderDetail.setUpdateTime(date);
+            orderDetail.setCreateTime(dateStr);
+            orderDetail.setUpdateTime(dateStr);
             orderDetailDao.save(orderDetail);
 
         }
         //3.写入订单数据库（orderMaster和orderDetail）
+        //判断大于
+        if(orderAmount.compareTo(FREIGHT)==-1){
+            orderAmount=orderAmount.add(PAYFREIGHT);
+        }
         OrderMaster orderMaster = new OrderMaster();
         //先copy再设置信息，不然会报null
         BeanUtils.copyProperties(orderDTO,orderMaster);
@@ -87,8 +100,8 @@ public class OrderServiceImpl implements OrderService {
         orderMaster.setOrderAmount(orderAmount);
         orderMaster.setOrderStatus(OrderStatusEnum.NEW.getCode());
         orderMaster.setPayStatus(PayStatusEnum.WAIT.getCode());
-        orderMaster.setCreateTime(date);
-        orderMaster.setUpdateTime(date);
+        orderMaster.setCreateTime(dateStr);
+        orderMaster.setUpdateTime(dateStr);
         orderMasterDao.save(orderMaster);
 
         //4.扣库存
@@ -207,5 +220,21 @@ public class OrderServiceImpl implements OrderService {
             throw new SellException(ResultEnum.ORDER_UPDATE_FAIL);
         }
         return orderDTO;
+    }
+
+    @Override
+    public List<OrderDTO> findByBuyerOpenidAndAndPayStatus(String buyerOpenid, Integer status) {
+
+        List<OrderMaster>  orderMasterList= orderMasterDao.findByBuyerOpenid(buyerOpenid);
+        List<OrderDTO> list=new ArrayList<>();
+        for(OrderMaster orderMaster:orderMasterList){
+            List<OrderDetail> orderDetailList =
+                    orderDetailDao.findByOrderId(orderMaster.getOrderId());
+            OrderDTO orderDTO = new OrderDTO();
+            BeanUtils.copyProperties(orderMaster,orderDTO);
+            orderDTO.setOrderDetailList(orderDetailList);
+            list.add(orderDTO);
+        }
+        return list;
     }
 }

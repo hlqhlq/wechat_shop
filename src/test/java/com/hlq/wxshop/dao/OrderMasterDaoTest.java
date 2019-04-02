@@ -38,8 +38,8 @@ public class OrderMasterDaoTest {
         orderMaster.setBuyerPostcode("515100");
         orderMaster.setBuyerOpenid(OPENID);
         orderMaster.setOrderAmount(new BigDecimal(2.5));
-        orderMaster.setCreateTime(new Date());
-        orderMaster.setUpdateTime(new Date());
+//        orderMaster.setCreateTime(new Date());
+//        orderMaster.setUpdateTime(new Date());
 
         OrderMaster result = dao.save(orderMaster);
         Assert.assertNotNull(result);

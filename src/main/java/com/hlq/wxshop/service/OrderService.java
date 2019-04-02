@@ -4,6 +4,8 @@ import com.hlq.wxshop.dto.OrderDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+
 /**
  * @Author:HLQ
  * @Date:2019/3/11 20:03
@@ -24,6 +26,12 @@ public interface OrderService {
      */
    OrderDTO findone(String  orderId);
 
+    /**
+     * 根据buyerOpenid和支付状态查询订单
+     * @param status
+     * @return
+     */
+   List<OrderDTO> findByBuyerOpenidAndAndPayStatus(String buyerOpenid,Integer status);
     /**
      * 查询订单列表
      * @param buyerOpenid

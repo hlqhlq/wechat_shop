@@ -36,8 +36,8 @@ public class OrderDetailDaoTest {
         orderDetail.setProductName("巧克力");
         orderDetail.setProductPrice(new BigDecimal(2.2));
         orderDetail.setProductQuantity(3);
-        orderDetail.setCreateTime(new Date());
-        orderDetail.setUpdateTime(new Date());
+//        orderDetail.setCreateTime(new Date());
+//        orderDetail.setUpdateTime(new Date());
 
         OrderDetail result = dao.save(orderDetail);
         Assert.assertNotNull(result);

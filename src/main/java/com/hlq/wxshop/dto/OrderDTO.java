@@ -42,10 +42,10 @@ public class OrderDTO {
     private Integer payStatus ;
 
     /** 创建时间. */
-    private Date createTime;
+    private String createTime;
 
     /** 更新时间. */
-    private Date updateTime;
+    private String updateTime;
 
     List<OrderDetail> orderDetailList;
 }
