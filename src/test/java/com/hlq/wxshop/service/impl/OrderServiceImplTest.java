@@ -62,7 +62,7 @@ public class OrderServiceImplTest {
 
     @Test
     public void findone() {
-        OrderDTO result = orderService.findone("1554103238163806004");
+        OrderDTO result = orderService.findOne("1554103238163806004");
         log.info("查询订单 result={}",result);
         Assert.assertEquals("1554103238163806004",result.getOrderId());
 
@@ -77,21 +77,21 @@ public class OrderServiceImplTest {
 
     @Test
     public void cancel() {
-        OrderDTO orderDTO = orderService.findone("1554103238163806004");
+        OrderDTO orderDTO = orderService.findOne("1554103238163806004");
         OrderDTO result = orderService.cancel(orderDTO);
         Assert.assertEquals(OrderStatusEnum.CANCEL.getCode(), result.getOrderStatus());
     }
 
     @Test
     public void finish() {
-        OrderDTO orderDTO = orderService.findone("1554103238163806004");
+        OrderDTO orderDTO = orderService.findOne("1554103238163806004");
         OrderDTO result = orderService.finish(orderDTO);
         Assert.assertEquals(OrderStatusEnum.FINISHED.getCode(), result.getOrderStatus());
     }
 
     @Test
     public void paid() {
-        OrderDTO orderDTO = orderService.findone("1554103238163806004");
+        OrderDTO orderDTO = orderService.findOne("1554103238163806004");
         OrderDTO result = orderService.paid(orderDTO);
         Assert.assertEquals(PayStatusEnum.SUCCESS.getCode(), result.getPayStatus());
     }

@@ -24,14 +24,14 @@ public interface OrderService {
      * @param orderId
      * @return
      */
-   OrderDTO findone(String  orderId);
+   OrderDTO findOne(String  orderId);
 
     /**
-     * 根据buyerOpenid和支付状态查询订单
-     * @param status
+     * 根据buyerOpenid和order、支付状态查询订单
+     * @param
      * @return
      */
-   List<OrderDTO> findByBuyerOpenidAndAndPayStatus(String buyerOpenid,Integer status);
+   List<OrderDTO> findByBuyerOpenidAndAndOrderStatusAndAndPayStatus(String buyerOpenid,Integer orderStatus,Integer payStatus);
     /**
      * 查询订单列表
      * @param buyerOpenid

@@ -30,9 +30,21 @@ public class OrderController {
     }
 
     @GetMapping("/findByPayStatus")
-    public ResultVO findByPayStatus(String openid,Integer status){
-        List<OrderDTO> list = orderService.findByBuyerOpenidAndAndPayStatus(openid,status);
+    public ResultVO findByPayStatus(String openid,Integer orderStatus,Integer payStatus){
+        List<OrderDTO> list = orderService
+                .findByBuyerOpenidAndAndOrderStatusAndAndPayStatus(openid,orderStatus,payStatus);
         return ResultVOUtil.success(list);
+    }
+
+    @GetMapping("/cancel")
+    public ResultVO cancelOrder(@RequestParam(value = "openId") String openId,
+                                @RequestParam(value = "orderId")String orderId){
+        OrderDTO orderDTO = orderService.findOne(orderId);
+        if(orderDTO.getBuyerOpenid().equals(openId)){
+            orderService.cancel(orderDTO);
+            return ResultVOUtil.success();
+        }
+        return ResultVOUtil.error(1,"用户openid出错");
     }
 
 

@@ -23,12 +23,12 @@ public interface OrderMasterDao extends JpaRepository<OrderMaster,String> {
     Page<OrderMaster> findByBuyerOpenid(String buyerOpenid, Pageable pageable);
 
     /**
-     * 买家openid 和 payStatus支付状态查询订单
+     * 买家openid 和 orderStatus和payStatus支付状态查询订单
      * @param buyerOpenid
      * @param payStatus
      * @return
      */
-    List<OrderDTO> findByBuyerOpenidAndAndPayStatus(String buyerOpenid, Integer payStatus);
+    List<OrderMaster> findByBuyerOpenidAndAndOrderStatusAndAndPayStatus(String buyerOpenid, Integer orderStatus,Integer payStatus);
 
     /**
      * 根据买家openid查询订单
@@ -36,6 +36,4 @@ public interface OrderMasterDao extends JpaRepository<OrderMaster,String> {
      * @return
      */
     List<OrderMaster> findByBuyerOpenid(String buyerOpenid);
-
-
 }

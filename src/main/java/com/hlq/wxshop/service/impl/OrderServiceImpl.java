@@ -114,7 +114,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderDTO findone(String orderId) {
+    public OrderDTO findOne(String orderId) {
         OrderMaster orderMaster = orderMasterDao.findOne(orderId);
         if(orderMaster==null){
              throw new SellException(ResultEnum.ORDER_NOT_EXIST);
@@ -223,9 +223,10 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OrderDTO> findByBuyerOpenidAndAndPayStatus(String buyerOpenid, Integer status) {
+    public List<OrderDTO> findByBuyerOpenidAndAndOrderStatusAndAndPayStatus(String buyerOpenid,Integer orderStatus,Integer payStatus) {
 
-        List<OrderMaster>  orderMasterList= orderMasterDao.findByBuyerOpenid(buyerOpenid);
+        List<OrderMaster>  orderMasterList= orderMasterDao
+                .findByBuyerOpenidAndAndOrderStatusAndAndPayStatus(buyerOpenid,orderStatus,payStatus);
         List<OrderDTO> list=new ArrayList<>();
         for(OrderMaster orderMaster:orderMasterList){
             List<OrderDetail> orderDetailList =
