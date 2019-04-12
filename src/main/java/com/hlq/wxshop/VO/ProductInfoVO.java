@@ -27,6 +27,9 @@ public class ProductInfoVO {
     @JsonProperty("img")
     private String productImg;
 
+    @JsonProperty("stock")
+    private Integer productStock;
+
     @JsonProperty("createTime")
     private Date createTime;
 

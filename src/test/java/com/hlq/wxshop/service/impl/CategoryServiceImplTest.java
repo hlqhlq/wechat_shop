@@ -28,7 +28,7 @@ public class CategoryServiceImplTest {
     @Test
     public void findOne() {
         ProductCategory result = service.findOne(1);
-        Assert.assertEquals(new Integer(1),result.getCategoryId());
+        Assert.assertEquals(new Integer(1),result.getCategoryType());
     }
 
     @Test
@@ -46,7 +46,7 @@ public class CategoryServiceImplTest {
 
     @Test
     public void save() {
-         ProductCategory category=new ProductCategory("进口零食",1003,"图标",new Date(),new Date());
+         ProductCategory category=new ProductCategory("进口零食","图标",new Date(),new Date());
          ProductCategory result = service.save(category);
          Assert.assertNotNull(result);
 

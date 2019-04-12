@@ -1,5 +1,7 @@
 package com.hlq.wxshop.service.impl;
 
+import com.hlq.wxshop.VO.OrderVO;
+import com.hlq.wxshop.config.LimitGlobalData;
 import com.hlq.wxshop.converter.OrderMaster2OrderDTOConverter;
 import com.hlq.wxshop.dao.OrderDetailDao;
 import com.hlq.wxshop.dao.OrderMasterDao;
@@ -14,6 +16,7 @@ import com.hlq.wxshop.model.OrderMaster;
 import com.hlq.wxshop.model.ProductInfo;
 import com.hlq.wxshop.service.OrderService;
 import com.hlq.wxshop.service.ProductInfoService;
+import com.hlq.wxshop.utils.CastEntityUtil;
 import com.hlq.wxshop.utils.DateFormatUtil;
 import com.hlq.wxshop.utils.KeyUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -43,6 +46,11 @@ import java.util.stream.Collectors;
 public class OrderServiceImpl implements OrderService {
 
     /**
+     * 自定义属性值
+     */
+    @Autowired
+    private LimitGlobalData limitGlobalData;
+    /**
      * 满20免运费
      */
     private final static  BigDecimal FREIGHT=new BigDecimal(20);
@@ -66,6 +74,7 @@ public class OrderServiceImpl implements OrderService {
         String orderId=KeyUtil.UniqueKey();
         Date date = new Date();
         String dateStr=DateFormatUtil.getCurrentTimeBySecond(date);
+        String month=DateFormatUtil.getYearMonth(date);
         BigDecimal orderAmount = new BigDecimal(BigInteger.ZERO);
 
         //1.查询商品（数量，价格）
@@ -100,6 +109,7 @@ public class OrderServiceImpl implements OrderService {
         orderMaster.setOrderAmount(orderAmount);
         orderMaster.setOrderStatus(OrderStatusEnum.NEW.getCode());
         orderMaster.setPayStatus(PayStatusEnum.WAIT.getCode());
+        orderMaster.setMonth(month);
         orderMaster.setCreateTime(dateStr);
         orderMaster.setUpdateTime(dateStr);
         orderMasterDao.save(orderMaster);
@@ -109,6 +119,8 @@ public class OrderServiceImpl implements OrderService {
                 new CartDTO(e.getProductId(),e.getProductQuantity())
         ).collect(Collectors.toList());
         productInfoService.decStock(cartDTOList);
+        //5.加销量
+        productInfoService.addVolume(cartDTOList);
 
         return orderDTO;
     }
@@ -169,6 +181,9 @@ public class OrderServiceImpl implements OrderService {
                 .collect(Collectors.toList());
         productInfoService.addStock(cartDTOList);
 
+        //扣销量
+        productInfoService.decVolume(cartDTOList);
+
         //如果已支付，需要退款
         if (orderDTO.getPayStatus().equals(PayStatusEnum.SUCCESS.getCode())) {
               //TODO
@@ -223,6 +238,16 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public Integer countOrder() {
+        return orderMasterDao.countAllBy();
+    }
+
+    @Override
+    public Integer countDaifahuo(Integer order_status, Integer pay_status) {
+        return orderMasterDao.countByOrderStatusAndPayStatus(order_status,pay_status);
+    }
+
+    @Override
     public List<OrderDTO> findByBuyerOpenidAndAndOrderStatusAndAndPayStatus(String buyerOpenid,Integer orderStatus,Integer payStatus) {
 
         List<OrderMaster>  orderMasterList= orderMasterDao
@@ -238,4 +263,12 @@ public class OrderServiceImpl implements OrderService {
         }
         return list;
     }
+
+    @Override
+    public List<OrderVO> findTotalMoneyByMonth() {
+        List<Object[]> objList = orderMasterDao.findTotalMoneyByMonth(limitGlobalData.getMonthNum());
+        List<OrderVO> orderVOList = CastEntityUtil.castEntity(objList, OrderVO.class, new OrderVO());
+        return orderVOList;
+    }
+
 }

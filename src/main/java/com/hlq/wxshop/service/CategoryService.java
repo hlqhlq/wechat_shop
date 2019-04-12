@@ -10,7 +10,7 @@ import java.util.List;
  */
 public interface CategoryService {
 
-    ProductCategory findOne(Integer categoryId);
+    ProductCategory findOne(Integer categoryType);
 
     List<ProductCategory> findAll();
 

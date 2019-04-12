@@ -1,5 +1,6 @@
 package com.hlq.wxshop.controller;
 
+import com.hlq.wxshop.VO.OrderVO;
 import com.hlq.wxshop.VO.ResultVO;
 import com.hlq.wxshop.dto.OrderDTO;
 import com.hlq.wxshop.service.OrderService;
@@ -20,6 +21,11 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
+    /**
+     * 生成订单
+     * @param orderDTO
+     * @return
+     */
     @PostMapping("/create")
     //@requestBody User user 这种形式会将JSON字符串中的值赋予user中对应的属性上
     //需要注意的是，JSON字符串中的key必须对应user中的属性名，否则是请求不过去的。
@@ -29,6 +35,13 @@ public class OrderController {
         return ResultVOUtil.success(result);
     }
 
+    /**
+     * 根基订单状态、支付状态查询未付款的订单
+     * @param openid
+     * @param orderStatus
+     * @param payStatus
+     * @return
+     */
     @GetMapping("/findByPayStatus")
     public ResultVO findByPayStatus(String openid,Integer orderStatus,Integer payStatus){
         List<OrderDTO> list = orderService
@@ -36,6 +49,12 @@ public class OrderController {
         return ResultVOUtil.success(list);
     }
 
+    /**
+     * 取消订单
+     * @param openId
+     * @param orderId
+     * @return
+     */
     @GetMapping("/cancel")
     public ResultVO cancelOrder(@RequestParam(value = "openId") String openId,
                                 @RequestParam(value = "orderId")String orderId){
@@ -45,6 +64,18 @@ public class OrderController {
             return ResultVOUtil.success();
         }
         return ResultVOUtil.error(1,"用户openid出错");
+    }
+
+    /**
+     * 根据openid查询订单
+     * @param orderId
+     * @return
+     */
+    @GetMapping("/findOne")
+    public ResultVO findOne(String orderId){
+        OrderDTO orderDTO = orderService.findOne(orderId);
+        return ResultVOUtil.success(orderDTO);
+
     }
 
 

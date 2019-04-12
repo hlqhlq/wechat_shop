@@ -5,6 +5,7 @@ import com.hlq.wxshop.model.ProductCategory;
 import com.hlq.wxshop.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -18,8 +19,8 @@ public class CategoryServiceImpl implements CategoryService {
     @Autowired
     private ProductCategoryDao dao;
     @Override
-    public ProductCategory findOne(Integer categoryId) {
-        return dao.findOne(categoryId);
+    public ProductCategory findOne(Integer categoryType) {
+        return dao.findOne(categoryType);
     }
 
     @Override
@@ -33,6 +34,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @Transactional(rollbackFor =Exception.class)
     public ProductCategory save(ProductCategory productCategory) {
         return dao.save(productCategory);
     }

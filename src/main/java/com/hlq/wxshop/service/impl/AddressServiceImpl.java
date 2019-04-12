@@ -6,6 +6,7 @@ import com.hlq.wxshop.model.UserAddress;
 import com.hlq.wxshop.service.AddressService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -20,6 +21,7 @@ public class AddressServiceImpl implements AddressService{
     private AddressDao addressDao;
 
     @Override
+    @Transactional(rollbackFor =Exception.class)
     public UserAddress save(UserAddress address) {
         return addressDao.save(address);
     }
@@ -30,6 +32,7 @@ public class AddressServiceImpl implements AddressService{
     }
 
     @Override
+    @Transactional(rollbackFor =Exception.class)
     public void deleteById(Integer id) {
         addressDao.delete(id);
     }

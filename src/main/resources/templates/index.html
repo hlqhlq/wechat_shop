@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html class="loginHtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>登陆</title>
+    <head th:include="common/header::html"></head>
+</head>
+<body class="loginBody">
+<form class="layui-form" id="app-form">
+    <div class="login_face">
+        <img th:src="@{/images/touxiang.jpg}" alt="login_img" class="userAvatar"/>
+    </div>
+    <div class="layui-word-aux" style="text-align: center;font-weight: bolder;font-size: 25px;margin-bottom: 10px;">
+        <span>商城商家端</span>
+    </div>
+    <div class="layui-form-item input-item">
+        <label for="username">用户名</label>
+        <input type="text" placeholder="请输入用户名" autocomplete="off" id="username"name="username" class="layui-input" lay-verify="required">
+    </div>
+    <div class="layui-form-item input-item">
+        <label for="password">密码</label>
+        <input type="password" placeholder="请输入密码" autocomplete="off" id="password"name="password" class="layui-input" lay-verify="required">
+    </div>
+    <div class="layui-form-item">
+        <button class="layui-btn layui-block" lay-filter="login" lay-submit>登录</button>
+    </div>
+</form>
+</body>
+</html>

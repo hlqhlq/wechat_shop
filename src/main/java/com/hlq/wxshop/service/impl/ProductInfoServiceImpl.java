@@ -1,5 +1,6 @@
 package com.hlq.wxshop.service.impl;
 
+import com.hlq.wxshop.config.LimitGlobalData;
 import com.hlq.wxshop.dao.ProductInfoDao;
 import com.hlq.wxshop.dto.CartDTO;
 import com.hlq.wxshop.enums.ProductStatusEnum;
@@ -7,13 +8,16 @@ import com.hlq.wxshop.enums.ResultEnum;
 import com.hlq.wxshop.exception.SellException;
 import com.hlq.wxshop.model.ProductInfo;
 import com.hlq.wxshop.service.ProductInfoService;
+import com.hlq.wxshop.utils.DateFormatUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @Author:HLQ
@@ -21,6 +25,12 @@ import java.util.List;
  */
 @Service
 public class ProductInfoServiceImpl implements ProductInfoService {
+
+    /**
+     * 自定义属性值
+     */
+    @Autowired
+    private LimitGlobalData limitGlobalData;
 
     @Autowired
     private ProductInfoDao dao;
@@ -46,6 +56,7 @@ public class ProductInfoServiceImpl implements ProductInfoService {
     }
 
     @Override
+    @Transactional(rollbackFor =Exception.class)
     public ProductInfo save(ProductInfo productInfo) {
         return dao.save(productInfo);
     }
@@ -67,6 +78,34 @@ public class ProductInfoServiceImpl implements ProductInfoService {
 
     @Override
     @Transactional(rollbackFor =Exception.class )
+    public void addVolume(List<CartDTO> cartDTOList) {
+        for (CartDTO cartDTO: cartDTOList) {
+            ProductInfo productInfo = dao.findOne(cartDTO.getProductId());
+            if (productInfo == null) {
+                throw new SellException(ResultEnum.PRODUCT_NOT_EXIST);
+            }
+            Integer result = productInfo.getProductVolume() + cartDTO.getProductQuantity();
+            productInfo.setProductVolume(result);
+            dao.save(productInfo);
+        }
+    }
+
+    @Override
+    @Transactional(rollbackFor =Exception.class)
+    public void decVolume(List<CartDTO> cartDTOList) {
+        for (CartDTO cartDTO: cartDTOList) {
+            ProductInfo productInfo = dao.findOne(cartDTO.getProductId());
+            if (productInfo == null) {
+                throw new SellException(ResultEnum.PRODUCT_NOT_EXIST);
+            }
+            Integer result = productInfo.getProductVolume()-cartDTO.getProductQuantity();
+            productInfo.setProductVolume(result);
+            dao.save(productInfo);
+        }
+    }
+
+    @Override
+    @Transactional(rollbackFor =Exception.class )
     public void decStock(List<CartDTO> cartDTOList) {
         for(CartDTO cartDTO:cartDTOList){
             ProductInfo info = dao.findOne(cartDTO.getProductId());
@@ -80,5 +119,39 @@ public class ProductInfoServiceImpl implements ProductInfoService {
             info.setProductStock(result);
             dao.save(info);
         }
+    }
+
+    @Override
+    public List<ProductInfo> findGoodsByVolume() {
+        List<ProductInfo> list = dao.findGoodsByVolume(limitGlobalData.getProductNum());
+        return  list;
+    }
+
+    @Override
+    @Transactional(rollbackFor =Exception.class)
+    public ProductInfo updateHits(String productId) {
+        ProductInfo product = dao.findOne(productId);
+        AtomicInteger hits=new AtomicInteger(product.getProductHits());
+        //保证多线程安全
+        product.setProductHits(hits.incrementAndGet());
+        ProductInfo result = dao.save(product);
+        return  result;
+    }
+
+    @Override
+    public List<ProductInfo> findMostHotsGoodsByHits() {
+        List<ProductInfo> info = dao.findMostHotsGoodsByHits(limitGlobalData.getHitsNum());
+        return info;
+    }
+
+    @Override
+    public ProductInfo update(ProductInfo productInfo) {
+        ProductInfo info = dao.findOne(productInfo.getProductId());
+        productInfo.setProductVolume(info.getProductVolume());
+        productInfo.setProductHits(info.getProductHits());
+        productInfo.setCreateTime(info.getCreateTime());
+        productInfo.setUpdateTime(new Date());
+        ProductInfo product = dao.save(productInfo);
+        return product;
     }
 }

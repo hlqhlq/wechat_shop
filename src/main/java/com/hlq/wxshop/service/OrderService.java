@@ -1,5 +1,6 @@
 package com.hlq.wxshop.service;
 
+import com.hlq.wxshop.VO.OrderVO;
 import com.hlq.wxshop.dto.OrderDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -60,4 +61,26 @@ public interface OrderService {
      * @return
      */
    OrderDTO paid(OrderDTO orderDTO);
+
+    /**
+     * 查询全部订单数量
+     * @return
+     */
+   Integer countOrder();
+
+    /**
+     * 查询待发货订单数量
+     * @param order_status
+     * @param pay_status
+     * @return
+     */
+   Integer countDaifahuo(Integer order_status,Integer pay_status);
+
+    /**
+     * 根据订单月份分组返回订单数量以及总销售额
+     * @return
+     */
+   List<OrderVO> findTotalMoneyByMonth();
+
+
 }

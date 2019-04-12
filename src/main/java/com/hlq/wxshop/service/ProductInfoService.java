@@ -1,6 +1,7 @@
 package com.hlq.wxshop.service;
 
 import com.hlq.wxshop.dto.CartDTO;
+import com.hlq.wxshop.dto.OrderDTO;
 import com.hlq.wxshop.model.ProductInfo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -48,8 +49,45 @@ public interface ProductInfoService {
     void addStock(List<CartDTO> cartDTOList);
 
     /**
+     *加销量
+     */
+    void addVolume(List<CartDTO> cartDTOList);
+
+    /**
+     *减销量
+     */
+    void decVolume(List<CartDTO> cartDTOList);
+
+    /**
      * 减库存
      * @param cartDTOList
      */
     void decStock(List<CartDTO> cartDTOList);
+
+    /**
+     * 商品销量排行
+     * @return
+     */
+    List<ProductInfo> findGoodsByVolume();
+
+   /**
+    * 跟新商品点击量
+    * @param productId
+    */
+     ProductInfo updateHits(String productId);
+
+    /**
+     * 商品浏览量排行
+     * @return
+     */
+    List<ProductInfo> findMostHotsGoodsByHits();
+
+
+    /**
+     * 跟新商品
+     * @param productInfo
+     * @return
+     */
+    ProductInfo update(ProductInfo productInfo);
+
 }

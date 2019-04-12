@@ -11,6 +11,7 @@ import java.util.Date;
 public class DateFormatUtil {
 
     private static SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
+    private static SimpleDateFormat yd = new SimpleDateFormat("yyyy-MM");
     private static SimpleDateFormat datetime = new SimpleDateFormat(
             "yyyy-MM-dd HH:mm:ss");
 
@@ -31,6 +32,11 @@ public class DateFormatUtil {
      */
     public static String getCurrentTimeBySecond(Date date) {
         String time = datetime.format(date);
+        return time;
+    }
+
+    public static String getYearMonth(Date date) {
+        String time = yd.format(date);
         return time;
     }
 }

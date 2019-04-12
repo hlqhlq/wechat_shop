@@ -8,9 +8,24 @@ spring:
   jpa:
     show-sql: true
 
+  #thymeleaf
+  thymeleaf:
+    mode: HTML5
+    encoding: UTF-8
+    content-type: text/html
+    cache: false   #关闭缓存
+    prefix: classpath:/templates/
+    suffix: .html
+  #修改默认的静态寻址资源目录
+  resources:
+    static-locations: classpath:/templates/,classpath:/static/
+
+#设置根路径
 server:
   context-path: /wxshop
   port: 8080
+
+
 
 
 #自定义属性 微信appid,secret
@@ -18,3 +33,14 @@ wechat:
   appid: wxc095705554d9d1bf
   secret: daa2eb9be070a810864b00593e0c1339
   url: https://api.weixin.qq.com/sns/jscode2session
+
+#自定义展示月份、商品浏览量、商品数量排行的limit
+limit:
+  monthNum: 3
+  productNum: 4
+  hitsNum: 4
+
+#修改security不保护
+security:
+  basic:
+    enabled: false

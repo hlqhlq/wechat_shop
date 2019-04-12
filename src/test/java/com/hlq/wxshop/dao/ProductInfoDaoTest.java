@@ -56,4 +56,16 @@ public class ProductInfoDaoTest {
 
     }
 
+    @Test
+    public void findGoodsByVolume(){
+        List<ProductInfo> list = dao.findGoodsByVolume(4);
+        System.out.println(list.get(0).getProductName());
+    }
+
+    @Test
+    public void findMostHotsGoodsByHits(){
+        List<ProductInfo> list = dao.findGoodsByVolume(4);
+        System.out.println(list.get(0).getProductName());
+    }
+
 }

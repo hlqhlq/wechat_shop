@@ -22,9 +22,9 @@ public class ProductCategory {
     /**
      *  类目id
      */
-    @Id
-    @GeneratedValue
-    private Integer categoryId;
+//    @Id
+//    @GeneratedValue
+//    private Integer categoryId;
 
     /**
      * 类目名字
@@ -34,6 +34,8 @@ public class ProductCategory {
     /**
      * 类目编号
      */
+    @Id
+    @GeneratedValue
     private Integer categoryType;
 
     /**
@@ -50,12 +52,10 @@ public class ProductCategory {
     }
 
 
-    public ProductCategory(String categoryName, Integer categoryType, String categoryIco, Date createTime, Date updateTime) {
+    public ProductCategory(String categoryName, String categoryIco, Date createTime, Date updateTime) {
         this.categoryName = categoryName;
-        this.categoryType = categoryType;
         this.categoryIco = categoryIco;
         this.createTime = createTime;
         this.updateTime = updateTime;
     }
-
 }

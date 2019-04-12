@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>首页</title>
+    <head th:include="common/header::html"></head>
+</head>
+<body>
+<div class="container">
+    <div class="logo">
+        <a th:href="@{/pc/main}">商城后台管理系统</a>
+    </div>
+    <div class="left_open">
+        <i title="展开左侧栏" class="iconfont">&#xe699;</i>
+    </div>
+    <ul class="layui-nav left fast-add" lay-filter="">
+        <li class="layui-nav-item">
+            <a class="app-a-open" id="app-a-welcome" th:_href="@{/pc/welcome}">我的桌面</a>
+        </li>
+    </ul>
+    <ul class="layui-nav right" lay-filter="">
+        <li class="layui-nav-item">
+            <a href="javascript:;" th:text="${session.currentUser.username}">Admin</a>
+            <dl class="layui-nav-child">
+                <!-- 二级菜单 -->
+                <dd>
+                    <a class="app-a-open" id="app-a-user-index" th:_href="@{/user/index.htm}">个人信息</a>
+                </dd>
+                <dd>
+                    <a class="loginout" th:href="@{/logout.htm}">退出</a>
+                </dd>
+            </dl>
+        </li>
+    </ul>
+</div>
+<!-- 左侧菜单开始 -->
+<div class="left-nav">
+    <div id="side-nav">
+        <ul id="nav">
+            <li>
+                <a href="javascript:;">
+                    <i class="layui-icon">&#xe857;</i>
+                    <cite>商品管理</cite>
+                    <i class="iconfont nav_right">&#xe697;</i>
+                </a>
+                <ul class="sub-menu">
+                    <li>
+                        <a th:_href="@{/pc/goodsList}">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>查看商品</cite>
+                        </a>
+                    </li>
+                    <li>
+                        <a th:_href="@{/product/index.htm}">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>添加商品</cite>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="javascript:;">
+                    <i class="layui-icon">&#xe62a;</i>
+                    <cite>订单管理</cite>
+                    <i class="iconfont nav_right">&#xe697;</i>
+                </a>
+                <ul class="sub-menu">
+                    <li>
+                        <a th:_href="@{/user/index.htm}">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>查看订单</cite>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="javascript:;">
+                    <i class="layui-icon ">&#xe653;</i>
+                    <cite>商品类目管理</cite>
+                    <i class="iconfont nav_right">&#xe697;</i>
+                </a>
+                <ul class="sub-menu">
+                    <li>
+                        <a th:_href="@{/user/index.htm}">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>添加/修改</cite>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="javascript:;">
+                    <i class="layui-icon">&#xe634;</i>
+                    <cite>轮播图管理</cite>
+                    <i class="iconfont nav_right">&#xe697;</i>
+                </a>
+                <ul class="sub-menu">
+                    <li>
+                        <a th:_href="@{/user/index.htm}">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>查看轮播图</cite>
+                        </a>
+                    </li>
+                    <li>
+                        <a th:_href="@{/user/index.htm}">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>添加轮播图</cite>
+                        </a>
+                    </li>
+
+                </ul>
+            </li>
+            <li>
+                <a href="javascript:;">
+                    <i class="layui-icon">&#xe63a;</i>
+                    <cite>公告管理</cite>
+                    <i class="iconfont nav_right">&#xe697;</i>
+                </a>
+                <ul class="sub-menu">
+                    <li>
+                        <a th:_href="@{/user/index.htm}">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>查看公告</cite>
+                        </a>
+                    </li>
+
+                </ul>
+            </li>
+            <li>
+                <a href="javascript:;">
+                    <i class="iconfont">&#xe726;</i>
+                    <cite>管理员管理</cite>
+                    <i class="iconfont nav_right">&#xe697;</i>
+                </a>
+                <ul class="sub-menu">
+                    <li>
+                        <a th:_href="@{/user/index.htm}">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>管理员</cite>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="page-content">
+    <div class="layui-tab tab" lay-filter="wenav_tab" id="WeTabTip" lay-allowclose="true">
+        <ul class="layui-tab-title">
+            <li style="display:none;">我的桌面</li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show">
+                <iframe src="welcome.html" frameborder="0" scrolling="yes" class="weIframe" id="welIframe"></iframe>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="page-content-bg"></div>
+<div class="footer">
+    <div class="copyright">Copyright ©2019 商城后台管理系统 All Rights Reserved</div>
+</div>
+<!-- 底部结束 -->
+<script type="text/javascript">
+    // layui.use(['jquery'], function(){
+    //     var $ = layui.jquery;
+    //     $(function() {
+    //
+    //     });
+    //
+    // });
+
+
+</script>
+</body>
+</html>

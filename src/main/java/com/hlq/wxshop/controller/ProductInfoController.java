@@ -10,7 +10,6 @@ import com.hlq.wxshop.service.ProductInfoService;
 import com.hlq.wxshop.utils.ResultVOUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -32,6 +31,7 @@ public class ProductInfoController {
     private ProductInfoService productInfoService;
     @Autowired
     private CategoryService categoryService;
+
 
     /**
      * id查询商品
@@ -96,5 +96,11 @@ public class ProductInfoController {
         }
 
         return ResultVOUtil.success(productVOList);
+    }
+
+    @GetMapping("/updateHits")
+    public ResultVO updateHits(String productId){
+        ProductInfo info = productInfoService.updateHits(productId);
+        return ResultVOUtil.success(info);
     }
 }

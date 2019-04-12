@@ -16,6 +16,11 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
+    <!-- 修改springboot默认的thymeleaf版本 -->
+    <thymeleaf.version>3.0.9.RELEASE</thymeleaf.version>
+    <!-- 布局功能的支持程序  thymeleaf3主程序 适配 layout2以上版本 -->
+    <!-- thymeleaf2   layout1-->
+    <thymeleaf-layout-dialect.version>2.2.2</thymeleaf-layout-dialect.version>
   </properties>
 
   <parent>
@@ -71,39 +76,19 @@
       <version>3.3.2</version>
     </dependency>
 
+    <!-- 支持Thymeleaf模板引擎，包括与Spring的集成 -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-thymeleaf</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-security</artifactId>
+    </dependency>
 
 
-    <!--<dependency>-->
-      <!--<groupId>com.google.code.gson</groupId>-->
-      <!--<artifactId>gson</artifactId>-->
-    <!--</dependency>-->
 
-    <!--<dependency>-->
-      <!--<groupId>com.github.binarywang</groupId>-->
-      <!--<artifactId>weixin-java-mp</artifactId>-->
-      <!--<version>2.7.0</version>-->
-    <!--</dependency>-->
-
-    <!--<dependency>-->
-      <!--<groupId>cn.springboot</groupId>-->
-      <!--<artifactId>best-pay-sdk</artifactId>-->
-      <!--<version>1.1.0</version>-->
-    <!--</dependency>-->
-
-    <!--<dependency>-->
-      <!--<groupId>org.springframework.boot</groupId>-->
-      <!--<artifactId>spring-boot-starter-freemarker</artifactId>-->
-    <!--</dependency>-->
-
-    <!--<dependency>-->
-      <!--<groupId>org.springframework.boot</groupId>-->
-      <!--<artifactId>spring-boot-starter-data-redis</artifactId>-->
-    <!--</dependency>-->
-
-    <!--<dependency>-->
-      <!--<groupId>org.springframework.boot</groupId>-->
-      <!--<artifactId>spring-boot-starter-websocket</artifactId>-->
-    <!--</dependency>-->
   </dependencies>
 
   <build>
