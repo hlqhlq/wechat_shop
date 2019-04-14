@@ -26,6 +26,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Service
 public class ProductInfoServiceImpl implements ProductInfoService {
 
+
     /**
      * 自定义属性值
      */
@@ -153,5 +154,29 @@ public class ProductInfoServiceImpl implements ProductInfoService {
         productInfo.setUpdateTime(new Date());
         ProductInfo product = dao.save(productInfo);
         return product;
+    }
+
+
+    @Override
+    public ProductInfo takeOff(String productId) {
+        ProductInfo productInfo = dao.findOne(productId);
+        productInfo.setProductStatus(ProductStatusEnum.Down.getCode());
+        productInfo.setUpdateTime(new Date());
+        ProductInfo result = dao.save(productInfo);
+        return result;
+    }
+
+    @Override
+    public ProductInfo putOn(String productId) {
+        ProductInfo productInfo = dao.findOne(productId);
+        productInfo.setProductStatus(ProductStatusEnum.On.getCode());
+        productInfo.setUpdateTime(new Date());
+        ProductInfo result = dao.save(productInfo);
+        return result;
+    }
+
+    @Override
+    public Page<ProductInfo> searchByKey(String productId, String productName, Integer categoryType, Pageable pageable) {
+        return dao.searchByKey(productId,productName,categoryType,pageable);
     }
 }

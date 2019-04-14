@@ -66,5 +66,20 @@ public interface OrderMasterDao extends JpaRepository<OrderMaster,String> {
     @Query(nativeQuery =true,value="select sum(order_amount) as totalMoney,month,count(order_id) as orderNum from order_master where pay_status=1  group by month order by month asc limit ?1")
     List<Object[]> findTotalMoneyByMonth(Integer limit);
 
+    /**
+     * 根据搜索条件查询order  分页
+     * @param orderIdKey
+     * @param startDate
+     * @param endDate
+     * @param orderStatusKey
+     * @param payStatusKey
+     * @return
+     */
+//    @Query(nativeQuery = true,value = "select * from order_master om where(om.order_id like CONCAT('%',?1,'%') or ?1 is null) and (om.create_time >= ?2 or ?2 is null) and (om.update_time <= ?3 or ?3 is null) and (om.order_status= ?4 or ?4 is null) and (om.pay_status= ?5 or ?5 is null)order by ?#{#pageable}")
+//    Page<OrderMaster> searchByKey(String orderId,String createTime,String updateTime,Integer orderStatus,Integer payStatus,Pageable pageable);
 
+
+    //@Query(nativeQuery = true,value = "select * from order_master om where (om.order_id like CONCAT('%',?1,'%')or ?1 is null) and (om.order_status=?2 or ?2 is null) and (om.pay_status=?3 or ?3 is null) and (om.create_time>=?4 or ?4 is null) and (om.create_time<=?5 or ?5 is null) order by ?#{#pageable}")
+    @Query(nativeQuery = true,value = "select * from order_master om where (om.order_id like CONCAT('%',?1,'%')or ?1 is null) and (om.order_status=?2 or ?2 is null) and (om.pay_status=?3 or ?3 is null) and (om.create_time between ?4 and ?5 or ?4 is null) order by ?#{#pageable}")
+    Page<OrderMaster> searchByKey(String orderId,Integer orderStatus,Integer payStatus,String startDate,String endDate,Pageable pageable);
 }

@@ -90,4 +90,27 @@ public interface ProductInfoService {
      */
     ProductInfo update(ProductInfo productInfo);
 
+
+    /**
+     * 下架商品
+     * @param productId
+     * @return
+     */
+    ProductInfo takeOff(String productId);
+
+    /**
+     * 上架商品
+     * @param productId
+     * @return
+     */
+    ProductInfo putOn(String productId);
+
+    /**
+     * 根据key模糊查询
+     * @param productId
+     * @param productName
+     * @param categoryType
+     * @return
+     */
+    Page<ProductInfo> searchByKey(String productId,String productName,Integer categoryType,Pageable pageable);
 }

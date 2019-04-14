@@ -7,9 +7,21 @@
 <body>
 
 <div class="layui-form-item" style="margin:15px 15px;height:30px;">
-    <div class="layui-input-inline">
-        <input type="text" id="filter" name="filter" value="" lay-verify="" placeholder="请输入搜索内容" autocomplete="off" class="layui-input">
+    <div class="layui-input-inline" style="width:100px;">
+        <input type="text" id="searchId" name="searchId" value="" lay-verify="" placeholder="搜索编号" autocomplete="off" class="layui-input">
     </div>
+    <div class="layui-input-inline" style="width:100px;">
+        <input type="text" id="searchName" name="searchName" value="" lay-verify="" placeholder="搜索商品名称" autocomplete="off" class="layui-input">
+    </div>
+    <!--<div class="layui-input-inline" style="width:100px;">-->
+        <!--<input type="text" id="searchType" name="searchType" value="" lay-verify="" placeholder="搜索商品分类" autocomplete="off" class="layui-input">-->
+    <!--</div>-->
+    <div class="layui-form layui-input-inline" style="width:100px;">
+        <select id="searchType" class="layui-input" >
+        </select>
+
+    </div>
+
     <div class="layui-input-inline">
         <button class="layui-btn" id="search" data-type="reload" name="search">
             <i class="layui-icon"></i>搜索
@@ -17,11 +29,19 @@
     </div>
     <div style="float:right;width:110px;height:35px;">
         <div class="layui-input-inline" style="width:100px;">
-            <button class="layui-btn layui-btn-normal" id="delete" name="delete">
-                <i class="layui-icon">&#x1006;</i>批量删除
+            <button class="layui-btn layui-btn-danger" id="takeOffBatch" name="takeOffBatch">
+                <i class="layui-icon">&#x1006;</i>批量下架
             </button>
         </div>
     </div>
+    <div style="float:right;width:110px;height:35px;">
+        <div class="layui-input-inline" style="width:100px;">
+            <button class="layui-btn layui-btn-success" id="putOnBatch" name="putOnBatch">
+                <i class="layui-icon">&#x1006;</i>批量上架
+            </button>
+        </div>
+    </div>
+
 </div>
 <div>
     <table id="goods" lay-filter="goods"></table>
@@ -32,7 +52,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label">商品名称</label>
             <div class="layui-input-block">
-                <input type="text" name="productName" id="productName" required lay-verify="required" placeholder="请输入商品名称" value="" class="layui-input" />
+                <input type="text" name="productName" id="productName"required lay-verify="required" placeholder="请输入商品名称" value="" class="layui-input" />
             </div>
         </div>
         <div class="layui-form-item" lay-filter="test">
@@ -56,6 +76,7 @@
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">商品图片</label>
+            <input type="hidden" name="productImg" id="productUrl" value=""/>
             <img style="width:260px;height:180px;" src="" id="productImg">
             <button type="button" class="layui-btn layui-btn-warm" id="uploadGoodsImg">
                 <i class="layui-icon">&#xe67c;</i>上传图片
@@ -72,7 +93,9 @@
         <div class="layui-form-item">
             <label class="layui-form-label">商品状态</label>
             <div class="layui-input-block">
-                <input type="text" name="productStatus" id="productStatus" required lay-verify="required"  value="" class="layui-input" />
+                <!--<input type="text" name="productStatus" id="productStatus" required lay-verify="required"  value="" class="layui-input" />-->
+                <input type="radio" name="productStatus" id="shangjia" value="0" title="上架">
+                <input type="radio" name="productStatus" id="xiajia" value="1" title="下架">
             </div>
         </div>
     </form>
@@ -89,7 +112,10 @@
 <script type="text/html" id="dateTpl">
     {{ layui.laytpl.fn(d.editdate) }}
 </script>
+<script type="text/javascript">
+</script>
 <script type="text/javascript" th:inline="none">
+    var categoryList;
     var table;
     var layer;
     var form;
@@ -110,12 +136,14 @@
         }
         var uploadInst = upload.render({
             elem: '#uploadGoodsImg' //绑定元素
-            ,url: 'goods/uploadImg' //上传接口
+            ,url: context+'/pc/upload/uploadImg' //上传接口
             ,data:'json'
             ,done: function(res){
                 layer.msg("上传图片成功！",{icon:1,time:2000});
-                var str="<img style='width:280px;height:160px;' src='upload/"+res.src+"' /><input type='hidden' name='goodsImg' value='"+res.src+"' />";
+                var str="<img style='width:280px;height:160px;' src='"+res.src+"' />";
                 $("#newImg").html(str);
+                $("#productUrl").val(res.src);
+
             }
             ,error: function(){
                 layer.msg("图片上传失败！请重试！",{icon:5,time:2000});
@@ -125,11 +153,13 @@
             type: "get",
             url: context+"/wx/category/getAll",
             success: function(result){
-                var str="";
+                categoryList=result.data;
+                var str="<option value=\"\">商品分类</option>";
                 for(var i=0;i<result.data.length;i++){
                     str=str+"<option value='"+result.data[i].categoryType+"'>"+result.data[i].categoryName+"</option>";
                 }
                 $("#category").html(str);
+                $("#searchType").html(str);
                 form.render();
             }
         });
@@ -141,15 +171,15 @@
             , url: context+'/pc/product/findBySplitPage'
             , cols: [[
                 { checkbox: true, LAY_CHECKED: false } //其它参数在此省略
-                , { field: 'productId', title: '编号', width: 120, align: 'center' }
+                , { field: 'productId', title: '编号', width: 140, align: 'center' }
                 , { field: 'productName', title: '商品名称', width: 160, align: 'center' }
                 , {field:'category', title: '分类', width: 120 ,align: 'center',templet: function(d){
                         return d.category.categoryName
                     }
                 }
-                , { field: 'productPrice', title: '价格', width: 110,sort:true, align: 'center' }
-                , { field: 'productStock', title: '库存', width: 110,sort:true, align: 'center' }
-                ,{field:'productImg', title: '商品图片', width: 160 ,align: 'center'}
+                , { field: 'productPrice', title: '价格', width: 100,sort:true, align: 'center' }
+                , { field: 'productStock', title: '库存', width: 100,sort:true, align: 'center' }
+                ,{field:'productImg', title: '商品图片', width: 160 ,align: 'center',templet:'#proImg'}
                 , { field: 'productDescription', title: '商品描述', width: 180, align: 'center' }
                 , { field: 'productStatus', title: '商品状态', width: 100, align: 'center',templet: '#proStatus'}
                 , {title: '操作', fixed: 'right', width: 160, align: 'center', toolbar: '#bar' }
@@ -167,21 +197,24 @@
                 $("#curPageIndex").val(curr);
                 //得到数据总量
                 //console.log(count);
-                $("[data-field='productStatus']").children().each(function () {
-                    if($(this).text()=='0'){
-                        $("#opertation").html("下架")
-                    }
-                })
             }
         });
 
         //#region --------------搜索----------------
         $("#search").click(function ()
         {
-            var strFilter = $("#filter").val();
+            var searchId= $("#searchId").val();
+            var searchName= $("#searchName").val();
+            var searchType= $("#searchType").val();
+            for(var i=0;i<categoryList.length;i++){
+                var categoryName=categoryList[i].categoryName
+                if(searchType==categoryName){
+                    searchType=categoryList[i].categoryType
+                }
+            }
             tableIns.reload({
+                url:context+"/pc/product/search?searchId="+searchId+"&searchName="+searchName+"&searchType="+searchType,
                 where: {
-                    keyword: strFilter
                 },page: {
                     curr: 1 //重新从第 1 页开始
                 }
@@ -189,31 +222,70 @@
         });
         //#endregion
 
-        //#region --------------批量删除----------------
-        $("#delete").click(function ()
+        //#region --------------批量上架----------------
+        $("#putOnBatch").click(function ()
         {
             var checkStatus = table.checkStatus('goods');
             var count = checkStatus.data.length;//选中的行数
             if (count > 0)
             {
-                parent.layer.confirm('确定要删除所选商品？', { icon: 3 }, function (index)
+                parent.layer.confirm('确定要上架所选商品？', { icon: 3 }, function (index)
                 {
                     var data = checkStatus.data; //获取选中行的数据
                     var batchId = '';
                     for (var i = 0; i < data.length; i++)
                     {
-                        batchId += data[i].goodsId + ",";
+                        batchId += data[i].productId + ",";
                     }
                     $.ajax({
-                        url: 'goods/batchDelete',
-                        type: "post",
+                        url: context+'/pc/product/putOnBatch',
+                        type: "get",
                         data: { 'batchId': batchId },
                         success: function (result){
-                            if (result=="success"){
-                                parent.layer.msg('删除成功', { icon: 1, shade: 0.4, time: 1000 })
+                            if (result.code==0){
+                                parent.layer.msg('批量上架成功', { icon: 1, shade: 0.4, time: 1000 });
+                                //重载表格
+                                tableIns.reload();
                                 $("#search").click();//重载TABLE
                             }else{
-                                parent.layer.msg("删除失败", { icon: 5, shade: [0.4], time: 1000 });
+                                parent.layer.msg("批量上架失败", { icon: 5, shade: [0.4], time: 1000 });
+                            }
+                            parent.layer.close(index);
+                        }
+                    })
+                });
+            }
+            else
+                parent.layer.msg("请至少选择一条数据", { icon: 5, shade: 0.4, time: 1000 });
+        });
+
+        //#region --------------批量下架----------------
+        $("#takeOffBatch").click(function ()
+        {
+            var checkStatus = table.checkStatus('goods');
+            var count = checkStatus.data.length;//选中的行数
+            if (count > 0)
+            {
+                parent.layer.confirm('确定要下架所选商品？', { icon: 3 }, function (index)
+                {
+                    var data = checkStatus.data; //获取选中行的数据
+                    var batchId = '';
+                    for (var i = 0; i < data.length; i++)
+                    {
+                        batchId += data[i].productId + ",";
+                    }
+                    $.ajax({
+                        url: context+'/pc/product/takeOffBatch',
+                        type: "get",
+                        data: { 'batchId': batchId },
+                        success: function (result){
+                            if (result.code==0){
+                                parent.layer.msg('批量下架成功', { icon: 1, shade: 0.4, time: 1000 });
+                                //重载表格
+                                tableIns.reload();
+                                $("#search").click();//重载TABLE
+                            }else{
+                                parent.layer.msg("批量下架失败", { icon: 5, shade: [0.4], time: 1000 });
                             }
                             parent.layer.close(index);
                         }
@@ -247,25 +319,42 @@
                     success: function (layero, index)
                     {
                         var body = layer.getChildFrame('body', index); //得到子页面层的BODY
+                        // $("#productUrlInput").append('<input type="hidden" name="productImg" id="productUrl" value=""/>');
                         $("#productId").val(data.productId);
                         $("#productName").val(data.productName);
                         $("#productPrice").val(data.productPrice);
                         $("#productStock").val(data.productStock);
                         $("#category").val(data.category.categoryType);
-                        $("#productImg").val(data.productImg);
+                        $("#productUrl").val(data.productImg);
+                        $("#productImg").attr("src",data.productImg);
                         $("#productDescription").val(data.productDescription);
-                        $("#productStatus").val(data.productStatus);
+                        $("#shangjia").prop("checked", data.productStatus== 0 ? true : false);
+                        $("#xiajia").prop("checked", data.productStatus== 1 ? true : false);
                         form.render();
                         body.find('#hidValue').val(index); //将本层的窗口索引传给子页面层的hidValue中
                     },
                     btn:['修改','取消'],
                     yes: function(index, layero){
+                        if($("#productName").val()==null || $("#productName").val()==""){
+                            layer.msg('商品名称为必填项', { icon: 5, shade: 0.4, time: 2000 });
+                            return
+                        }
+                        if($("#productPrice").val()==null || $("#productPrice").val()==""){
+                            layer.msg('商品价格为必填项', { icon: 5, shade: 0.4, time: 2000 });
+                            return
+                        }
+                        if($("#categoryType").val()==null || $("#categoryType").val()==""){
+                            layer.msg('商品分类为必填项', { icon: 5, shade: 0.4, time: 2000 });
+                            return
+                        }
                         $.post(context+'/pc/product/update',$('#formData').serialize(),function(res){
                             if ( res.code==0)
                             {
                                 parent.layer.msg('修改成功', { icon: 1, shade: 0.4, time: 1000 });
                                 $("#search").click();
                                 $("#handle_status").val('');
+                                // $("#productUrl").remove();
+
                             }
                             else
                             {
@@ -275,25 +364,49 @@
                             layer.close(index);
                         });
                     }
+
+
                 });
-            }else if(layEvent === 'delete'){
-                layer.confirm('是否删除该商品？', {
+            }else if(layEvent === 'take-off'){
+                layer.confirm('是否下架该商品？', {
                     btn: ['确认', '取消'] //可以无限个按钮
                     ,btn1: function(index, layero){
                         $.ajax({
                             type: "get",
-                            url: "goods/delete",
-                            data: "goodsId="+data.goodsId,
-                            success: function(msg){
-                                if(msg=='success'){
-                                    parent.layer.msg('删除成功', { icon: 1, shade: 0.4, time: 1000 });
+                            url: context+"/pc/product/takeOff",
+                            data: "productId="+data.productId,
+                            success: function(res){
+                                if(res.code==0){
+                                    parent.layer.msg('下架成功', { icon: 1, shade: 0.4, time: 1000 });
                                 }else{
-                                    parent.layer.msg('删除失败', { icon: 5, shade: 0.4, time: 1000 });
+                                    parent.layer.msg('下架失败', { icon: 5, shade: 0.4, time: 1000 });
                                 }
                             }
                         });
-                        $(tr).remove();
                         layer.close(index);
+                        //重载表格
+                        tableIns.reload();
+                    }
+                });
+            }else if(layEvent === 'put-on'){
+                layer.confirm('是否上架该商品？', {
+                    btn: ['确认', '取消'] //可以无限个按钮
+                    ,btn1: function(index, layero){
+                        $.ajax({
+                            type: "get",
+                            url: context+"/pc/product/putOn",
+                            data: "productId="+data.productId,
+                            success: function(res){
+                                if(res.code==0){
+                                    parent.layer.msg('上架成功', { icon: 1, shade: 0.4, time: 1000 });
+                                }else{
+                                    parent.layer.msg('上架失败', { icon: 5, shade: 0.4, time: 1000 });
+                                }
+                            }
+                        });
+                        layer.close(index);
+                        // location.reload();
+                        tableIns.reload();
                     }
                 });
             }
@@ -303,11 +416,14 @@
 <script type="text/html" id="proStatus">
     {{#
     if (d.productStatus===0) { }}
-    <span style="color: #00ff00;font-weight:bold">上架</span>
+    <span style="color: #189F92;font-weight:bold">上架</span>
     {{#  }else { }}
     <span style="color: #ff0000;font-weight:bold">下架</span>
     {{#  }
     }}
+</script>
+<script type="text/html" id="proImg">
+    <img src="{{ d.productImg }}">
 </script>
 </body>
 </html>

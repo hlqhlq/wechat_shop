@@ -58,4 +58,14 @@ public class IndexController {
         return "goods/goodsList";
     }
 
+    @GetMapping("/addGoods")
+    public String addGoods(){
+        return "goods/addGoods";
+    }
+
+    @GetMapping("/orderList")
+    public String orderList(){
+        return "order/orderList";
+    }
+
 }

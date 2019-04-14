@@ -2,6 +2,7 @@ package com.hlq.wxshop.dao;
 
 import com.hlq.wxshop.VO.OrderVO;
 import com.hlq.wxshop.model.OrderMaster;
+import com.hlq.wxshop.model.ProductInfo;
 import com.hlq.wxshop.utils.CastEntityUtil;
 import org.junit.Assert;
 import org.junit.Test;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.math.BigDecimal;
@@ -82,5 +84,15 @@ public class OrderMasterDaoTest {
         for(int i=0;i<orderVOS.size();i++){
             System.out.println(orderVOS.get(i).getOrderNum());
         }
+    }
+
+    @Test
+    public void searchByKey(){
+        Pageable pageable=new PageRequest(0,3);
+//        Page<OrderMaster> list = dao.searchByKey("",
+//                "", "", 0, null, pageable);
+        Page<OrderMaster> test = dao.searchByKey("",0,0,"","",pageable);
+//        Page<OrderMaster> orderMasters = dao.searchByKey("", "", "", 0, null, pageable);
+        System.out.println(test.getTotalElements());
     }
 }

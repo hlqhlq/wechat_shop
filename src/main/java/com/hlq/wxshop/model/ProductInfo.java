@@ -39,7 +39,10 @@ public class ProductInfo {
 
     private String productImg;
 
-    private Integer productStatus;
+    /**
+     * 商品状态 0 上架  1 下架
+     */
+    private Integer productStatus=0;
 
     private Integer categoryType;
 

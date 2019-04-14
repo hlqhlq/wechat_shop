@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>添加商品</title>
+    <head th:include="common/header::html"></head>
+</head>
+
+<body>
+<div id="editForm" style="width: 700px; padding-top: 25px;">
+    <form id="formData" class="layui-form ">
+        <div class="layui-form-item">
+            <label class="layui-form-label">商品名称</label>
+            <div class="layui-input-block">
+                <input type="text" name="productName" id="productName" required
+                       lay-verify="required" placeholder="请输入商品名称" value=""
+                       class="layui-input" />
+            </div>
+        </div>
+        <div class="layui-form-item" lay-filter="test">
+            <label class="layui-form-label">商品类别</label>
+            <div class="layui-input-inline">
+                <select name="categoryType" id="category" required lay-verify="required">
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">商品价格</label>
+            <div class="layui-input-block">
+                <input type="text" name="productPrice" id="productPrice" required
+                       lay-verify="required" placeholder="请输入商品价格" value=""
+                       class="layui-input" />
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">商品库存</label>
+            <div class="layui-input-block">
+                <input type="text" name="productStock" id="productStock" required
+                       lay-verify="required" placeholder="请输入商品库存" value=""
+                       class="layui-input" />
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">商品图片</label>
+            <div class="layui-input-block">
+                <button type="button" class="layui-btn layui-btn-normal" id="test1">
+                    <i class="layui-icon">&#xe67c;</i>上传图片
+                </button>
+                <div style="display:inline-block" id="newImg"></div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">商品描述</label>
+            <div class="layui-input-block">
+					<textarea name="productDescription" id="productDescription" required
+                              lay-verify="required" class="layui-textarea"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">商品状态</label>
+            <div class="layui-input-block">
+                <input type="radio" name="productStatus" id="shangjia" value="0" title="上架" checked>
+                <input type="radio" name="productStatus" id="xiajia" value="1" title="下架">
+            </div>
+        </div>
+        <div class="layui-form-item" style="margin-left:110px;">
+            <button type="button" lay-submit lay-filter="*" class="layui-btn " style="margin-right:50px;">添加</button>
+            <button type="reset" class="layui-btn layui-btn-warm ">重置</button>
+        </div>
+    </form>
+</div>
+</body>
+<script type="text/javascript" th:inline="none">
+        layui.use(['layer', 'table','form','upload'], function ()
+        {
+            var table = layui.table;
+            var layer = layui.layer;
+            var form =layui.form;
+            var upload=layui.upload;
+            var uploadInst = upload.render({
+                elem: '#test1' //绑定元素
+                ,url: context+'/pc/upload/uploadImg' //上传接口
+                ,done: function(res){
+                    layer.msg("上传图片成功！",{icon:1,time:2000});
+                    var str="<img style='width:280px;height:160px;' src='"+res.src+"' /><input type='hidden' value='"+res.src+"' name='productImg' />"
+                    $("#newImg").html(str);
+                }
+                ,error: function(){
+                    layer.msg("上传图片失败！请重试！",{icon:5,time:2000});
+                }
+            });
+            form.on('submit(*)',function(){
+                $.ajax({
+                    type:"post",
+                    url:context+"/pc/product/save",
+                    data:$("#formData").serialize(),
+                    success:function(res){
+                        if(res.code==0){
+                            layer.msg("添加商品成功！",{icon:1,time:2000},function(){
+                                window.location.href=context+"/pc/goodsList";
+                                // $.get(context+"/pc/goodsList")
+                                // window.open(context+"/pc/goodsList");
+                            });
+                        }else{
+                            layer.msg("添加商品失败！请重试！",{icon:5,time:2000});
+                        }
+                    }
+                });
+                return false;
+            });
+            $.ajax({
+                type: "get",
+                url: context+"/wx/category/getAll",
+                success: function(result){
+                    var str="<option value=''>请选择分类</option>";
+                    for(var i=0;i<result.data.length;i++){
+                        str=str+"<option value='"+result.data[i].categoryType+"'>"+result.data[i].categoryName+"</option>";
+                    }
+                    $("#category").html(str);
+                    form.render();
+                }
+            });
+        });
+</script>
+</html>

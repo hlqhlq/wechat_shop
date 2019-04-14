@@ -20,11 +20,13 @@ import com.hlq.wxshop.utils.CastEntityUtil;
 import com.hlq.wxshop.utils.DateFormatUtil;
 import com.hlq.wxshop.utils.KeyUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.criterion.Order;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -271,4 +273,49 @@ public class OrderServiceImpl implements OrderService {
         return orderVOList;
     }
 
+
+    @Override
+    public Page<OrderDTO> findBySplitPage(Pageable pageable) {
+        Page<OrderMaster> orderMasterPage = orderMasterDao.findAll(pageable);
+        List<OrderDTO> orderDTOList = new ArrayList<>();
+        for(OrderMaster orderMaster:orderMasterPage){
+            OrderDTO orderDTO = new OrderDTO();
+            BeanUtils.copyProperties(orderMaster,orderDTO);
+            List<OrderDetail> orderDetailList = orderDetailDao.findByOrderId(orderMaster.getOrderId());
+            orderDTO.setOrderDetailList(orderDetailList);
+            orderDTOList.add(orderDTO);
+        }
+        PageImpl<OrderDTO> orderDTOPage=
+            new PageImpl<>(orderDTOList, pageable, orderMasterPage.getTotalElements());
+        return orderDTOPage;
+    }
+
+    @Override
+    public Page<OrderDTO> searchByKey(String orderIdKey, Integer orderStatusKey, Integer payStatusKey,
+                                      String startDate, String endDate,Pageable pageable) {
+
+        Page<OrderMaster> orderMasterPage = orderMasterDao
+                .searchByKey(orderIdKey,  orderStatusKey, payStatusKey, startDate, endDate,pageable);
+        List<OrderDTO> orderDTOList = new ArrayList<>();
+        for(OrderMaster orderMaster:orderMasterPage){
+            OrderDTO orderDTO = new OrderDTO();
+            BeanUtils.copyProperties(orderMaster,orderDTO);
+            List<OrderDetail> orderDetailList = orderDetailDao.findByOrderId(orderMaster.getOrderId());
+            orderDTO.setOrderDetailList(orderDetailList);
+            orderDTOList.add(orderDTO);
+        }
+        PageImpl<OrderDTO> orderDTOPage=
+                new PageImpl<>(orderDTOList, pageable, orderMasterPage.getTotalElements());
+        return orderDTOPage;
+
+    }
+
+    @Override
+    public OrderMaster delivery(String orderId) {
+        OrderMaster order = orderMasterDao.findOne(orderId);
+        order.setOrderStatus(OrderStatusEnum.DELIVERY.getCode());
+        order.setUpdateTime(DateFormatUtil.getCurrentTimeBySecond(new Date()));
+        OrderMaster save = orderMasterDao.save(order);
+        return save;
+    }
 }

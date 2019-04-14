@@ -1,15 +1,24 @@
 package com.hlq.wxshop.controller.pc;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hlq.wxshop.VO.OrderSearchVO;
 import com.hlq.wxshop.VO.OrderVO;
 import com.hlq.wxshop.VO.ResultVO;
 import com.hlq.wxshop.config.LimitGlobalData;
+import com.hlq.wxshop.dto.OrderDTO;
 import com.hlq.wxshop.enums.OrderStatusEnum;
 import com.hlq.wxshop.enums.PayStatusEnum;
+import com.hlq.wxshop.model.OrderMaster;
+import com.hlq.wxshop.model.ProductInfo;
 import com.hlq.wxshop.service.OrderService;
 import com.hlq.wxshop.utils.ResultVOUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -63,5 +72,37 @@ public class PCOrderController {
         obj.put("totalMoney",totalMoney);
         obj.put("orderNum",orderNum);
         return  ResultVOUtil.success(obj);
+    }
+
+    @GetMapping("/findBySplitPage")
+    public JSONObject findBySplitPage(Integer page,Integer limit){
+        Sort sort=new Sort(Sort.Direction.DESC,"createTime");
+        Pageable request=new PageRequest(page-1,limit,sort);
+        Page<OrderDTO> orderDTOPage = orderService.findBySplitPage(request);
+        JSONObject obj=new JSONObject();
+        obj.put("code", 0);
+        obj.put("msg", "");
+        obj.put("count", orderDTOPage.getTotalElements());
+        obj.put("data", orderDTOPage.getContent());
+        return obj;
+    }
+
+    @GetMapping("/searchByKey")
+    public JSONObject search(String orderIdKey,Integer orderStatusKey,Integer payStatusKey,String startDate,String endDate,
+                             Integer page, Integer limit) {
+        Pageable request = new PageRequest(page - 1, limit);
+        Page<OrderDTO> orderDTOPage = orderService.searchByKey(orderIdKey,orderStatusKey,payStatusKey,startDate,endDate,request);
+        JSONObject obj = new JSONObject();
+        obj.put("code", 0);
+        obj.put("msg", "");
+        obj.put("count", orderDTOPage.getTotalElements());
+        obj.put("data", orderDTOPage.getContent());
+        return obj;
+    }
+
+    @GetMapping("/delivery")
+    public ResultVO delivery(String orderId){
+        OrderMaster delivery = orderService.delivery(orderId);
+        return ResultVOUtil.success(delivery);
     }
 }

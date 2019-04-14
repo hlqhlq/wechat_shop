@@ -2,8 +2,11 @@ package com.hlq.wxshop.service;
 
 import com.hlq.wxshop.VO.OrderVO;
 import com.hlq.wxshop.dto.OrderDTO;
+import com.hlq.wxshop.model.OrderMaster;
+import com.hlq.wxshop.model.ProductInfo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
 
@@ -81,6 +84,34 @@ public interface OrderService {
      * @return
      */
    List<OrderVO> findTotalMoneyByMonth();
+
+
+    /**
+     * 按下单时间排序分页查询订单
+     * @param pageable
+     * @return
+     */
+   Page<OrderDTO> findBySplitPage(Pageable pageable);
+
+    /**
+     * 根据搜索条件查询order 分页
+     * @param orderIdKey
+     * @param startDate
+     * @param endDate
+     * @param orderStatusKey
+     * @param payStatusKey
+     * @param pageable
+     * @return
+     */
+   Page<OrderDTO> searchByKey(String orderIdKey,Integer orderStatusKey,Integer payStatusKey,String startDate,String endDate,Pageable pageable);
+
+
+    /**
+     * 商品发货
+     * @param orderId
+     * @return
+     */
+   OrderMaster delivery(String orderId);
 
 
 }

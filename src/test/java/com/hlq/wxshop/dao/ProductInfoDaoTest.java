@@ -6,6 +6,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.math.BigDecimal;
@@ -66,6 +69,14 @@ public class ProductInfoDaoTest {
     public void findMostHotsGoodsByHits(){
         List<ProductInfo> list = dao.findGoodsByVolume(4);
         System.out.println(list.get(0).getProductName());
+    }
+
+    @Test
+    public void searchByKey(){
+        //List<ProductInfo> list = dao.searchByKey("10171017", "", null);
+        Pageable pageable=new PageRequest(0,1);
+        Page<ProductInfo> list = dao.searchByKey("","", 1001,pageable);
+        System.out.println(list.getTotalElements());
     }
 
 }
