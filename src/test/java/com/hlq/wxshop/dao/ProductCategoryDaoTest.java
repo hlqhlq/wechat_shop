@@ -46,10 +46,22 @@ public class ProductCategoryDaoTest {
         List<ProductCategory> result = dao.findByCategoryTypeIn(list);
         Assert.assertNotEquals(0,result.size());
 
+    }
 
+    @Test
+    public void findByStatusAndCategoryTypeInTest(){
+        List<Integer> list = Arrays.asList(1001,1002);
+        List<ProductCategory> result = dao.findByCategoryStatusAndCategoryTypeIn(0,list);
+        System.out.println(result.size());
+//        Assert.assertNotEquals(0,result.size());
 
     }
 
+    @Test
+    public void findByCategoryStatus(){
+        List<ProductCategory> list = dao.findByCategoryStatus(0);
+        System.out.println(list.size());
 
+    }
 
 }

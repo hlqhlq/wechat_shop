@@ -80,6 +80,6 @@ public interface OrderMasterDao extends JpaRepository<OrderMaster,String> {
 
 
     //@Query(nativeQuery = true,value = "select * from order_master om where (om.order_id like CONCAT('%',?1,'%')or ?1 is null) and (om.order_status=?2 or ?2 is null) and (om.pay_status=?3 or ?3 is null) and (om.create_time>=?4 or ?4 is null) and (om.create_time<=?5 or ?5 is null) order by ?#{#pageable}")
-    @Query(nativeQuery = true,value = "select * from order_master om where (om.order_id like CONCAT('%',?1,'%')or ?1 is null) and (om.order_status=?2 or ?2 is null) and (om.pay_status=?3 or ?3 is null) and (om.create_time between ?4 and ?5 or ?4 is null) order by ?#{#pageable}")
+    @Query(nativeQuery = true,value = "select * from order_master om where (om.order_id like CONCAT('%',?1,'%')or ?1 is null) and (om.order_status=?2 or ?2 is null) and (om.pay_status=?3 or ?3 is null) and if(?4!='',om.create_time>=?4,1=1) and if(?5!='',om.create_time<=?5,1=1) order by ?#{#pageable}")
     Page<OrderMaster> searchByKey(String orderId,Integer orderStatus,Integer payStatus,String startDate,String endDate,Pageable pageable);
 }

@@ -114,4 +114,11 @@ public interface OrderService {
    OrderMaster delivery(String orderId);
 
 
+    /**
+     * 修改订单信息
+     * @param orderMaster
+     * @return
+     */
+   OrderMaster update(OrderMaster orderMaster);
+
 }

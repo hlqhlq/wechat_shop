@@ -22,9 +22,6 @@ public class ProductCategory {
     /**
      *  类目id
      */
-//    @Id
-//    @GeneratedValue
-//    private Integer categoryId;
 
     /**
      * 类目名字
@@ -43,6 +40,10 @@ public class ProductCategory {
      */
     private String categoryIco;
 
+    /**
+     * 类目状态
+     */
+    private Integer categoryStatus=0;
     private Date createTime;
 
     private Date updateTime;
@@ -51,10 +52,10 @@ public class ProductCategory {
     public ProductCategory() {
     }
 
-
-    public ProductCategory(String categoryName, String categoryIco, Date createTime, Date updateTime) {
+    public ProductCategory(String categoryName, String categoryIco, Integer categoryStatus, Date createTime, Date updateTime) {
         this.categoryName = categoryName;
         this.categoryIco = categoryIco;
+        this.categoryStatus = categoryStatus;
         this.createTime = createTime;
         this.updateTime = updateTime;
     }

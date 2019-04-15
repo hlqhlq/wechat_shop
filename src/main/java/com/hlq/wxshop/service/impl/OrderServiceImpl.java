@@ -318,4 +318,17 @@ public class OrderServiceImpl implements OrderService {
         OrderMaster save = orderMasterDao.save(order);
         return save;
     }
+
+    @Override
+    public OrderMaster update(OrderMaster orderMaster) {
+        OrderMaster one = orderMasterDao.findOne(orderMaster.getOrderId());
+        one.setOrderAmount(orderMaster.getOrderAmount());
+        one.setBuyerName(orderMaster.getBuyerName());
+        one.setBuyerPhone(orderMaster.getBuyerPhone());
+        one.setBuyerAddress(orderMaster.getBuyerAddress());
+        one.setBuyerPostcode(orderMaster.getBuyerPostcode());
+        one.setUpdateTime(DateFormatUtil.getCurrentTimeBySecond(new Date()));
+        OrderMaster save = orderMasterDao.save(one);
+        return save;
+    }
 }

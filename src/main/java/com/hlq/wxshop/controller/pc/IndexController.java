@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpSession;
 
 /**
+ * 页面跳转控制器
  * @Author:HLQ
  * @Date:2019/4/9 20:33
  */
@@ -67,5 +68,11 @@ public class IndexController {
     public String orderList(){
         return "order/orderList";
     }
+
+    @GetMapping("/categoryList")
+    public String categoryList(){
+        return "category/categoryList";
+    }
+
 
 }

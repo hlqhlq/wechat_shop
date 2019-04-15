@@ -146,6 +146,7 @@ public class ProductInfoServiceImpl implements ProductInfoService {
     }
 
     @Override
+    @Transactional(rollbackFor =Exception.class)
     public ProductInfo update(ProductInfo productInfo) {
         ProductInfo info = dao.findOne(productInfo.getProductId());
         productInfo.setProductVolume(info.getProductVolume());
@@ -158,6 +159,7 @@ public class ProductInfoServiceImpl implements ProductInfoService {
 
 
     @Override
+    @Transactional(rollbackFor =Exception.class)
     public ProductInfo takeOff(String productId) {
         ProductInfo productInfo = dao.findOne(productId);
         productInfo.setProductStatus(ProductStatusEnum.Down.getCode());
@@ -167,6 +169,7 @@ public class ProductInfoServiceImpl implements ProductInfoService {
     }
 
     @Override
+    @Transactional(rollbackFor =Exception.class)
     public ProductInfo putOn(String productId) {
         ProductInfo productInfo = dao.findOne(productId);
         productInfo.setProductStatus(ProductStatusEnum.On.getCode());

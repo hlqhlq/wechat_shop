@@ -57,38 +57,47 @@
         <div class="layui-form-item">
             <label class="layui-form-label">订单总价</label>
             <div class="layui-input-block">
-                <input type="text" name="orderPrice" id="orderPrice" required lay-verify="required" value="" class="layui-input" />
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">订单地址</label>
-            <div class="layui-input-block">
-                <input type="text" name="orderAddress" id="orderAddress" required lay-verify="required" value="" class="layui-input" />
+                <input type="text" name="orderAmount" id="orderAmount" required lay-verify="required" value="" class="layui-input" />
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">收货人</label>
             <div class="layui-input-block">
-                <input type="text" name="orderUserName" id="orderUserName" required lay-verify="required" value="" class="layui-input" />
+                <input type="text" name="buyerName" id="buyerName" required lay-verify="required" value="" class="layui-input" />
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">收货电话</label>
             <div class="layui-input-block">
-                <input type="text" name="orderPhone" id="orderPhone" required lay-verify="required" value="" class="layui-input" />
+                <input type="text" name="buyerPhone" id="buyerPhone" required lay-verify="required" value="" class="layui-input" />
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">订单地址</label>
+            <div class="layui-input-block">
+                <input type="text" name="buyerAddress" id="buyerAddress" required lay-verify="required" value="" class="layui-input" />
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">邮政编码</label>
+            <div class="layui-input-block">
+                <input type="text" name="buyerPostcode" id="buyerPostcode" required lay-verify="required" value="" class="layui-input" />
             </div>
         </div>
     </form>
 </div>
 <script type="text/html" id="bar">
-    <a class="layui-btn layui-btn-xs" title="查看" lay-event="show">详情</a>
+    <a class="layui-btn layui-btn-xs" title="详情" lay-event="show">详情</a>
     <a class="layui-btn layui-btn-xs layui-btn-normal" title="编辑" lay-event="edit">编辑</a>
     {{#
     if(d.orderStatus==0 && d.payStatus==1){  }}
     <a class="layui-btn layui-btn-xs layui-btn-warm" title="发货" lay-event="delivery">发货</a>
+    <a class="layui-btn layui-btn-xs layui-btn-danger" title="取消" lay-event="cancel">取消</a>
+    {{#  }if(d.orderStatus==0 && d.payStatus==0){  }}
+    <a class="layui-btn layui-btn-xs layui-btn-danger" title="取消" lay-event="cancel">取消</a>
     {{#  }
     }}
-    <a class="layui-btn layui-btn-xs layui-btn-danger" title="取消" lay-event="cancel">取消</a>
+
 </script>
 <script type="text/html" id="dateTpl">
     {{ layui.laytpl.fn(d.editdate) }}
@@ -194,6 +203,7 @@
         table.on('tool(orders)', function (obj)
         { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
             var data = obj.data; //获得当前行数据
+            console.log(data)
             var layEvent = obj.event; //获得 lay-event 对应的值
             var tr = obj.tr; //获得当前行 tr 的DOM对象
             if (layEvent === 'edit')
@@ -211,21 +221,22 @@
                     {
                         var body = layer.getChildFrame('body', index); //得到子页面层的BODY
                         $("#orderId").val(data.orderId);
-                        $("#orderPrice").val(data.orderPrice);
-                        $("#goodsPrice").val(data.goodsPrice);
-                        $("#orderUserName").val(data.orderUserName);
-                        $("#orderPhone").val(data.orderPhone);
-                        $("#orderAddress").val(data.orderAddress);
+                        $("#orderAmount").val(data.orderAmount);
+                        $("#buyerName").val(data.buyerName);
+                        $("#buyerPhone").val(data.buyerPhone);
+                        $("#buyerPostcode").val(data.buyerPostcode);
+                        $("#buyerAddress").val(data.buyerAddress);
                         form.render();
                         body.find('#hidValue').val(index); //将本层的窗口索引传给子页面层的hidValue中
                     },
                     btn:['修改','取消'],
                     yes: function(index, layero){
-                        $.post('order/updateOrder',$('#orderForm').serialize(),function(data){
-                            if (data == 'success')
+                        $.post(context+'pc/order/update',$('#orderForm').serialize(),function(res){
+                            if (res.code == 0)
                             {
                                 parent.layer.msg('修改成功', { icon: 1, shade: 0.4, time: 1000 });
-                                $("#search").click();
+                                // $("#search").click();
+                                tableIns.reload();
                                 $("#handle_status").val('');
                             }
                             else
@@ -234,6 +245,26 @@
                             }
                             layer.close(index);
                         });
+                    }
+                });
+            }else if(layEvent === 'cancel'){
+                layer.confirm('是否取消该订单？', {
+                    btn: ['确认', '取消'] //可以无限个按钮
+                    ,btn1: function(index, layero){
+                        $.ajax({
+                            type: "get",
+                            url: context+"wx/order/cancel",
+                            data: {orderId:data.orderId,openId:data.buyerOpenid},
+                            success: function(res){
+                                if(res.code==0){
+                                    parent.layer.msg('取消订单成功', { icon: 1, shade: 0.4, time: 1000 });
+                                }else{
+                                    parent.layer.msg('取消订单失败', { icon: 5, shade: 0.4, time: 1000 });
+                                }
+                            }
+                        });
+                        layer.close(index);
+                        tableIns.reload();
                     }
                 });
             }else if(layEvent === 'delivery'){
@@ -259,42 +290,44 @@
             }else if(layEvent ==='show'){
                 var str="";
                 $.ajax({
-                    type : "post",
-                    url : "order/findOrderById",
+                    type : "get",
+                    url : context+"pc/order/searchByKey?page=1&limit=10",
                     async: false,
-                    data:"orderId="+data.orderId,
+                    data:"orderIdKey="+data.orderId,
                     dataType : "json",
-                    success : function(data) {
+                    success : function(res) {
                         str = str+ "<div class='layui-collapse' lay-accordion=''>";
-                        var date=new Date(data.orderDate).toLocaleString();
+                        // var date=new Date(data.orderDate).toLocaleString();
                         str = str
                             + "<div class='layui-colla-item'>"
                             + "<h2 class='layui-colla-title'>订单编号："
-                            + data.orderId
+                            + res.data[0].orderId
                             + "&nbsp;&nbsp;总价："
-                            + data.orderPrice
-                            + "元&nbsp;订单日期："+date+"</h2>"
+                            + res.data[0].orderAmount
+                            + "元&nbsp;订单日期："+res.data[0].createTime+"</h2>"
                             + "<div class='layui-colla-content layui-show'><h4>收货人："
-                            + data.orderUserName
+                            + res.data[0].buyerName
                             + "&nbsp;&nbsp;收货地址："
-                            + data.orderAddress
-                            + "&nbsp;电话："+data.orderPhone+"</h4>"
-                            + "<div class='layui-form'><table class='layui-table'><thead><tr><th>商品名称</th><th>价格</th><th>数量</th><th>小计</th></tr>"
+                            + res.data[0].buyerAddress
+                            + "&nbsp;电话："+res.data[0].buyerPhone+"</h4>"
+                            + "<div class='layui-form'><table class='layui-table'><thead><tr><th>商品名称</th><th>图片</th><th>价格</th><th>数量</th><th>小计</th></tr>"
                             + "</thead><tbody>";
-                        var arr = data.detailList;
-                        for (var t = 0; t < arr.length; t++) {
+                        var arr = res.data[0].orderDetailList;
+                        console.log(arr)
+                        for (var t = 0; t <arr.length; t++) {
+                            var productId=arr[t].productId;
                             str = str
-                                + "<tr><td><a href='goods/detail?goodsId="
-                                + arr[t].detailGoods.goodsId
-                                + "'>"
-                                + arr[t].detailGoods.goodsName
+                                + "<tr><td>"
+                                + arr[t].productName
+                                + "</td>" + "<td>"
+                                + "<img src='"+arr[t].productIcon+"'style='height:50px;' />"
                                 + "</a></td>" + "<td>"
-                                + arr[t].detailGoods.goodsPrice
+                                + arr[t].productPrice
                                 + "</td><td>"
-                                + arr[t].detailNum
-                                + "台</td><td>"
-                                + arr[t].detailGoods.goodsPrice
-                                * arr[t].detailNum + "元</td>"
+                                + arr[t].productQuantity
+                                + "件</td><td>"
+                                + arr[t].productPrice
+                                * arr[t].productQuantity + "元</td>"
                                 + "</tr>";
                         }
                         str = str

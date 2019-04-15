@@ -3,6 +3,7 @@ package com.hlq.wxshop.controller;
 import com.hlq.wxshop.VO.ProductInfoVO;
 import com.hlq.wxshop.VO.ProductVO;
 import com.hlq.wxshop.VO.ResultVO;
+import com.hlq.wxshop.enums.CategoryStatusEnum;
 import com.hlq.wxshop.model.ProductCategory;
 import com.hlq.wxshop.model.ProductInfo;
 import com.hlq.wxshop.service.CategoryService;
@@ -73,7 +74,8 @@ public class ProductInfoController {
         //2. 查询类目(一次性查询)  精简方法(java8, lambda)
         List<Integer> categoryTypeList = productList.stream().map(e -> e.getCategoryType()).
                 collect(Collectors.toList());
-        List<ProductCategory> productCategoryList = categoryService.findByCategoryTypeIn(categoryTypeList);
+        List<ProductCategory> productCategoryList = categoryService
+                .findByStatusCategoryTypeIn(CategoryStatusEnum.ON.getCode(),categoryTypeList);
 
         //3. 数据拼装
         List<ProductVO> productVOList = new ArrayList<>();

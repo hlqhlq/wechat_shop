@@ -1,6 +1,7 @@
 package com.hlq.wxshop.controller;
 
 import com.hlq.wxshop.VO.ResultVO;
+import com.hlq.wxshop.enums.CategoryStatusEnum;
 import com.hlq.wxshop.model.ProductCategory;
 import com.hlq.wxshop.service.CategoryService;
 import com.hlq.wxshop.utils.ResultVOUtil;
@@ -26,5 +27,15 @@ public class CategoryController {
     public ResultVO getCategory(){
         List<ProductCategory> category = categoryService.findAll();
         return ResultVOUtil.success(category);
+    }
+
+    /**
+     * 查询开启状态的类目
+     * @return
+     */
+    @GetMapping("/findStatusOn")
+    public ResultVO findStatusOn(){
+        List<ProductCategory> list = categoryService.findByStatus(CategoryStatusEnum.ON.getCode());
+        return ResultVOUtil.success(list);
     }
 }
