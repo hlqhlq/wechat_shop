@@ -74,5 +74,13 @@ public class IndexController {
         return "category/categoryList";
     }
 
+    @GetMapping("/carouselList")
+    public String carouselList(){
+        return "carousel/carouselList";
+    }
 
+    @GetMapping("/addCarousel")
+    public String addCarousel(){
+        return "carousel/addCarousel";
+    }
 }

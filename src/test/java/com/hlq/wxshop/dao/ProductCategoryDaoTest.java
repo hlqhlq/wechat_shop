@@ -6,6 +6,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -61,6 +64,14 @@ public class ProductCategoryDaoTest {
     public void findByCategoryStatus(){
         List<ProductCategory> list = dao.findByCategoryStatus(0);
         System.out.println(list.size());
+
+    }
+
+    @Test
+    public void searchByCategoryName(){
+        Pageable request = new PageRequest(0, 1);
+        Page<ProductCategory> list = dao.searchByCategoryName("口", request);
+        System.out.println(list.getTotalElements());
 
     }
 

@@ -18,6 +18,9 @@ public class ProductVO {
     @JsonProperty("ctype")
     private Integer categoryType;
 
+    @JsonProperty("cimage")
+    private String categoryIco;
+
     @JsonProperty("foods")
     private List<ProductInfoVO> productInfoVOList;
 

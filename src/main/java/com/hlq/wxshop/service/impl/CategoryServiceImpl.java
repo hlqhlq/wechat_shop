@@ -20,7 +20,6 @@ import java.util.List;
 @Service
 public class CategoryServiceImpl implements CategoryService {
 
-
     @Autowired
     private ProductCategoryDao dao;
     @Override
@@ -76,4 +75,15 @@ public class CategoryServiceImpl implements CategoryService {
         info.setUpdateTime(new Date());
         return dao.save(info);
     }
+
+    @Override
+    public void deleteById(Integer categoryId) {
+       dao.delete(categoryId);
+    }
+
+    @Override
+    public Page<ProductCategory> searchByName(String categoryName, Pageable pageable) {
+        return dao.searchByCategoryName(categoryName,pageable);
+    }
+
 }

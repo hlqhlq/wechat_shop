@@ -1,7 +1,10 @@
 package com.hlq.wxshop.dao;
 
 import com.hlq.wxshop.model.ProductCategory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
@@ -31,4 +34,13 @@ public interface ProductCategoryDao extends JpaRepository<ProductCategory,Intege
      * @return
      */
     List<ProductCategory> findByCategoryStatus(Integer code);
+
+    /**
+     * 类目名模糊查询
+     * @param categoryName
+     * @param pageable
+     * @return
+     */
+    @Query(nativeQuery = true,value = "select * from product_category where (category_name like CONCAT('%',?1,'%') or ?1 is null)order by ?#{#pageable}")
+    Page<ProductCategory> searchByCategoryName(String categoryName, Pageable pageable);
 }

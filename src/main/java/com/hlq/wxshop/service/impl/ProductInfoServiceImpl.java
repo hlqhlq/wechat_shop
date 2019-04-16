@@ -26,7 +26,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Service
 public class ProductInfoServiceImpl implements ProductInfoService {
 
-
     /**
      * 自定义属性值
      */
@@ -181,5 +180,10 @@ public class ProductInfoServiceImpl implements ProductInfoService {
     @Override
     public Page<ProductInfo> searchByKey(String productId, String productName, Integer categoryType, Pageable pageable) {
         return dao.searchByKey(productId,productName,categoryType,pageable);
+    }
+
+    @Override
+    public void deleteById(String productId) {
+         dao.delete(productId);
     }
 }

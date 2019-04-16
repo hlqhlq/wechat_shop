@@ -7,28 +7,28 @@
 <body>
 <form class="layui-form">
     <div class="layui-form-item" style="margin:15px;height:30px;">
-        <div style="height:40px;width:50px;float:left;line-height:40px;">分类名:</div>
-        <input type="text" class="layui-input" style="display:inline-block;width:250px;float:left;" id="keyword" name="keyword" value="" lay-verify="" placeholder="请输入分类名" autocomplete="off">
+        <div style="height:40px;width:60px;float:left;line-height:40px;">类目名称:</div>
+        <input type="text" class="layui-input" style="display:inline-block;width:250px;float:left;" id="keyword" name="categoryName" value="" lay-verify="" placeholder="请输入分类名" autocomplete="off">
         <div class="layui-input-inline" style="width:150px;text-align:center;">
             <a class="layui-btn" id="search" data-type="reload" name="search">
                 <i class="layui-icon"></i>搜索
             </a>
         </div>
-        <div style="float:right;width:490px;height:40px;">
+        <div style="float:right;width:400px;height:40px;">
             <div class="layui-input-inline" style="width:100px;margin-right:20px;">
                 <a class="layui-btn layui-btn-normal" id="add" name="add">
                     <i class="layui-icon">&#xe654;</i>添加分类
                 </a>
             </div>
-            <div class="layui-input-inline" style="width:100px;">
-                <a class="layui-btn layui-btn-normal" id="delete" name="delete">
-                    <i class="layui-icon">&#x1006;</i>批量删除
-                </a>
-            </div>
+            <!--<div class="layui-input-inline" style="width:100px;">-->
+                <!--<a class="layui-btn layui-btn-normal" id="delete" name="delete">-->
+                    <!--<i class="layui-icon">&#x1006;</i>批量删除-->
+                <!--</a>-->
+            <!--</div>-->
         </div>
     </div>
 </form>
-<div>
+<div style="margin-left: 15px;margin-top: 20px;">
     <table id="type" lay-filter="type"></table>
 </div>
 <div id="formData" style="width:600px;display:none;padding-top:15px;">
@@ -51,19 +51,28 @@
         </div>
     </form>
 </div>
-<div id="addData" style="width:300px;display:none;padding-top:15px;">
+<div id="addData" style="width:600px;display:none;padding-top:15px;">
     <form class="layui-form" id="addTypeForm">
         <div class="layui-form-item">
             <label class="layui-form-label">分类名称</label>
             <div class="layui-input-block">
-                <input type="text" name="typeName" required lay-verify="required" value="" class="layui-input" />
+                <input type="text" name="categoryName" id="categoryName2" required lay-verify="required" value="" class="layui-input" />
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">类目图标</label>
+            <div class="layui-input-block">
+                <button type="button" class="layui-btn layui-btn-normal" id="test1">
+                    <i class="layui-icon">&#xe67c;</i>上传图片
+                </button>
+                <div style="display:inline-block" id="newImg2"></div>
             </div>
         </div>
     </form>
 </div>
 <script type="text/html" id="bar">
     <a class="layui-btn layui-btn-xs layui-btn-normal" title="编辑" lay-event="edit">编辑</a>
-    <a class="layui-btn layui-btn-xs" title="刪除" lay-event="delete">刪除</a>
+    <a class="layui-btn layui-btn-xs layui-btn-danger" title="刪除" lay-event="delete">刪除</a>
 </script>
 <script type="text/html" id="dateTpl">
     {{ layui.laytpl.fn(d.editdate) }}
@@ -80,17 +89,29 @@
         upload=layui.upload;
 
         var uploadInst = upload.render({
-            elem: '#uploadGoodsImg' //绑定元素
+        elem: '#uploadGoodsImg' //绑定元素
+        ,url: context+'/pc/upload/uploadImg' //上传接口
+        ,data:'json'
+        ,done: function(res){
+            layer.msg("上传图片成功！",{icon:1,time:2000});
+            var str="<img style='width:150px;height:100px;' src='"+res.src+"' />";
+            $("#newImg").html(str);
+            $("#categoryIco").val(res.src);
+        }
+        ,error: function(){
+            layer.msg("图片上传失败！请重试！",{icon:5,time:2000});
+        }
+    });
+        upload.render({
+            elem: '#test1' //绑定元素
             ,url: context+'/pc/upload/uploadImg' //上传接口
-            ,data:'json'
             ,done: function(res){
                 layer.msg("上传图片成功！",{icon:1,time:2000});
-                var str="<img style='width:150px;height:100px;' src='"+res.src+"' />";
-                $("#newImg").html(str);
-                $("#categoryIco").val(res.src);
+                var str="<img style='width:150px;height:100px;' src='"+res.src+"' /><input type='hidden' value='"+res.src+"' name='categoryIco' id='categoryIco2'/>"
+                $("#newImg2").html(str);
             }
             ,error: function(){
-                layer.msg("图片上传失败！请重试！",{icon:5,time:2000});
+                layer.msg("上传图片失败！请重试！",{icon:5,time:2000});
             }
         });
         //--------------方法渲染TABLE----------------
@@ -99,11 +120,10 @@
             , id: 'type'
             , url: context+'pc/category/findBySplitPage'
             , cols: [[
-                { checkbox: true, LAY_CHECKED: false } //其它参数在此省略
-                ,{ field: 'categoryType', title: '类目编号', width: 100, align: 'center' }
+                { field: 'categoryType', title: '类目编号', width: 100, align: 'center' }
                 , { field: 'categoryName', title: '类目名称', width: 300, align: 'center'}
                 , { field: 'categoryIco', title: '类目图标', width: 300, align: 'center',templet:function (d) {
-                        return '<img src="'+d.categoryIco+'"/>'
+                        return '<a href="'+d.categoryIco+'"><img src="'+d.categoryIco+'"/></a>'
                     }}
                 ,{ field:'categoryStatus', title: '类目状态', width: 112, align: 'center',templet: function(d){
                         if(d.categoryStatus==0){
@@ -130,6 +150,8 @@
             }
         });
         $("#add").click(function(){
+            $("#categoryName2").val("");
+            $("#categoryIco2").attr("src","");
             layer.open({
                 type: 1,
                 title: '增加商品分类信息',
@@ -137,7 +159,7 @@
                 fix: false,
                 shadeClose: true,
                 maxmin: false,
-                area: ['400px;', '200px;'],    //窗体大小（宽,高）
+                area: ['650px;', '350px;'],    //窗体大小（宽,高）
                 content: $('#addData'),
                 success: function (layero, index)
                 {
@@ -147,11 +169,21 @@
                 },
                 btn:['添加','取消'],
                 yes: function(index, layero){
-                    $.post('goodsType/addGoodsType',$('#addTypeForm').serialize(),function(data){
-                        if (data == 'success')
+                    var categoryName=$("#categoryName2").val();
+                    var categoryIco=$("#categoryIco2").val();
+                    if($("#categoryName2").val()==null || $("#categoryName2").val()==""){
+                        layer.msg('类目名称为必填项', { icon: 5, shade: 0.4, time: 2000 });
+                        return
+                    }
+                    if($("#categoryIco2").val()==null || $("#categoryIco2").val()==""){
+                        layer.msg('类目图标为必填项', { icon: 5, shade: 0.4, time: 2000 });
+                        return
+                    }
+                    $.post(context+'pc/category/save',{categoryName:categoryName,categoryIco:categoryIco},function(res){
+                        if (res.code == 0)
                         {
                             parent.layer.msg('添加分类信息成功！', { icon: 1, shade: 0.4, time: 1000 });
-                            $("#search").click();
+                            tableIns.reload();
                         }
                         else
                         {
@@ -199,10 +231,10 @@
         //#region --------------搜索----------------
         $("#search").click(function ()
         {
-            var word=$("#keyword").val();
+            var categoryName=$("#keyword").val();
             tableIns.reload({
+                url:context+"pc/category/searchByName?categoryName="+categoryName,
                 where: {
-                    keyword: word
                 },page: {
                     curr: 1 //重新从第 1 页开始
                 }
@@ -294,11 +326,11 @@
                     btn: ['确认', '取消'] //可以无限个按钮
                     ,btn1: function(index, layero){
                         $.ajax({
-                            type: "POST",
-                            url: "goodsType/deleteGoodsType",
-                            data: "typeId="+data.typeId,
-                            success: function(msg){
-                                if(msg=='success'){
+                            type: "get",
+                            url: context+"pc/category/delete",
+                            data: "categoryId="+data.categoryType,
+                            success: function(res){
+                                if(res.code==0){
                                     parent.layer.msg('删除成功', { icon: 1, shade: 0.4, time: 1000 });
                                 }else{
                                     parent.layer.msg('删除失败', { icon: 5, shade: 0.4, time: 1000 });

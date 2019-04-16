@@ -113,4 +113,6 @@ public interface ProductInfoService {
      * @return
      */
     Page<ProductInfo> searchByKey(String productId,String productName,Integer categoryType,Pageable pageable);
+
+    void deleteById(String productId);
 }

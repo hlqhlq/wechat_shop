@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -69,7 +70,8 @@ public class PCProductController {
 
     @GetMapping("/findBySplitPage")
     public JSONObject findBySplitPage(Integer page, Integer limit){
-        Pageable request=new PageRequest(page-1,limit);
+        Sort sort = new Sort(Sort.Direction.DESC,"createTime");
+        Pageable request=new PageRequest(page-1,limit,sort);
         Page<ProductInfo> info = productInfoService.findAll(request);
         JSONObject obj=new JSONObject();
         obj.put("code", 0);
@@ -138,4 +140,9 @@ public class PCProductController {
         return ResultVOUtil.success(info);
     }
 
+    @GetMapping("/delete")
+    public ResultVO delete(String productId){
+        productInfoService.deleteById(productId);
+        return  ResultVOUtil.success();
+    }
 }

@@ -83,6 +83,7 @@ public class ProductInfoController {
             ProductVO productVO=new ProductVO();
             productVO.setCategoryName(category.getCategoryName());
             productVO.setCategoryType(category.getCategoryType());
+            productVO.setCategoryIco(category.getCategoryIco());
 
             List<ProductInfoVO> productInfoVOList = new ArrayList<>();
             for(ProductInfo productInfo:productList){

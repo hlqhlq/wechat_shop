@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @Author:HLQ
@@ -68,4 +69,33 @@ public class PCCategoryController {
         ProductCategory save = categoryService.save(one);
         return ResultVOUtil.success(save);
     }
+
+    @PostMapping("/save")
+    public ResultVO save(ProductCategory productCategory){
+        Date date=new Date();
+        productCategory.setCreateTime(date);
+        productCategory.setUpdateTime(date);
+        ProductCategory save = categoryService.save(productCategory);
+        return ResultVOUtil.success(save);
+
+    }
+
+    @GetMapping("/delete")
+    public ResultVO delete(Integer categoryId){
+        categoryService.deleteById(categoryId);
+        return ResultVOUtil.success();
+    }
+
+    @GetMapping("/searchByName")
+    public JSONObject searchByName(Integer page,Integer limit,String categoryName){
+        Pageable request=new PageRequest(page-1,limit);
+        Page<ProductCategory> info = categoryService.searchByName(categoryName, request);
+        JSONObject obj=new JSONObject();
+        obj.put("code", 0);
+        obj.put("msg", "");
+        obj.put("count",info.getTotalElements());
+        obj.put("data", info.getContent());
+        return  obj;
+    }
+
 }

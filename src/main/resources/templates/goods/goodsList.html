@@ -29,7 +29,7 @@
     </div>
     <div style="float:right;width:110px;height:35px;">
         <div class="layui-input-inline" style="width:100px;">
-            <button class="layui-btn layui-btn-danger" id="takeOffBatch" name="takeOffBatch">
+            <button class="layui-btn layui-btn-warm" id="takeOffBatch" name="takeOffBatch">
                 <i class="layui-icon">&#x1006;</i>批量下架
             </button>
         </div>
@@ -103,11 +103,12 @@
 <script type="text/html" id="bar">
     <a class="layui-btn layui-btn-xs layui-btn-normal" title="编辑" lay-event="edit">编辑</a>
     {{# if(d.productStatus==0){  }}
-       <a class="layui-btn layui-btn-xs layui-btn-danger" title="下架" lay-event="take-off">下架</a>
+       <a class="layui-btn layui-btn-xs layui-btn-warm" title="下架" lay-event="take-off">下架</a>
     {{#  }if(d.productStatus==1){ }}
        <a class="layui-btn layui-btn-xs layui-btn-success" title="上架" lay-event="put-on">上架</a>
     {{#  }
     }}
+    <a class="layui-btn layui-btn-xs layui-btn-danger" title="删除" lay-event="delete">删除</a>
 </script>
 <script type="text/html" id="dateTpl">
     {{ layui.laytpl.fn(d.editdate) }}
@@ -177,7 +178,9 @@
                 }
                 , { field: 'productPrice', title: '价格', width: 100,sort:true, align: 'center' }
                 , { field: 'productStock', title: '库存', width: 100,sort:true, align: 'center' }
-                ,{field:'productImg', title: '商品图片', width: 160 ,align: 'center',templet:'#proImg'}
+                ,{field:'productImg', title: '商品图片', width: 160 ,align: 'center',templet:function (d) {
+                        return '<a href="'+d.productImg+'"><img src="'+d.productImg+'"/></a>'
+                    }}
                 , { field: 'productDescription', title: '商品描述', width: 180, align: 'center' }
                 , { field: 'productStatus', title: '商品状态', width: 100, align: 'center',templet: '#proStatus'}
                 , {title: '操作', fixed: 'right', width: 160, align: 'center', toolbar: '#bar' }
@@ -333,10 +336,7 @@
                     },
                     btn:['修改','取消'],
                     yes: function(index, layero){
-                        if($("#productName").val()==null || $("#productName").val()==""){
-                            layer.msg('商品名称为必填项', { icon: 5, shade: 0.4, time: 2000 });
-                            return
-                        }
+
                         if($("#productPrice").val()==null || $("#productPrice").val()==""){
                             layer.msg('商品价格为必填项', { icon: 5, shade: 0.4, time: 2000 });
                             return
@@ -407,6 +407,26 @@
                         tableIns.reload();
                     }
                 });
+            }else if(layEvent === 'delete'){
+                layer.confirm('是否删除该商品？', {
+                    btn: ['确认', '取消'] //可以无限个按钮
+                    ,btn1: function(index, layero){
+                        $.ajax({
+                            type: "get",
+                            url: context+"pc/product/delete",
+                            data: "productId="+data.productId,
+                            success: function(res){
+                                if(res.code==0){
+                                    parent.layer.msg('删除成功', { icon: 1, shade: 0.4, time: 1000 });
+                                }else{
+                                    parent.layer.msg('删除失败', { icon: 5, shade: 0.4, time: 1000 });
+                                }
+                            }
+                        });
+                        $(tr).remove();
+                        layer.close(index);
+                    }
+                });
             }
         });
     });
@@ -420,8 +440,8 @@
     {{#  }
     }}
 </script>
-<script type="text/html" id="proImg">
-    <img src="{{ d.productImg }}">
-</script>
+<!--<script type="text/html" id="proImg">-->
+    <!--<img src="{{ d.productImg }}">-->
+<!--</script>-->
 </body>
 </html>

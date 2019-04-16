@@ -11,17 +11,20 @@ layui.use(['form','layer','jquery'],function(){
 
     //登录按钮
     form.on("submit(login)",function(data){
-        $(this).text("登录中...").attr("disabled","disabled").addClass("layui-disabled");
+        var that=$(this)
+        that.text("登录中...").attr("disabled","disabled").addClass("layui-disabled");
         $.ajax({
             url:context+'/pc/login',
             type:'post',
             data:$("#app-form").serialize(),
             success:function (result) {
                 if(result.code==0){
-                    layer.msg("登陆成功",{icon:1,shade:0.4,time:2000})
+                    layer.msg("登陆成功",{icon:1,shade:0.4,time:3000})
                     location.href = context + 'pc/main'
                 }else{
+                    that.text("登录").removeAttr("disabled").removeClass("layui-disabled");
                     layer.msg("登陆失败",{icon:5,shade:0.4,time:2000})
+
                 }
             }
 

@@ -54,4 +54,13 @@ public interface CategoryService {
      * @return
      */
     ProductCategory takeOff(Integer categoryId);
+
+    /**
+     * 删除类目
+     * @param categoryId
+     * @return
+     */
+    void deleteById(Integer categoryId);
+
+    Page<ProductCategory> searchByName(String categoryName,Pageable pageable);
 }
