@@ -83,4 +83,9 @@ public class IndexController {
     public String addCarousel(){
         return "carousel/addCarousel";
     }
+
+    @GetMapping("/noticeList")
+    public String noticeList(){
+        return "notice/noticeList";
+    }
 }
