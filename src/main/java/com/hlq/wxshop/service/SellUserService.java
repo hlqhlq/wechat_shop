@@ -12,4 +12,6 @@ public interface SellUserService {
 
 
     SellUser findByUsernameAndPassword(String username,String password);
+
+    SellUser findOne(Integer id);
 }

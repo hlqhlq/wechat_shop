@@ -247,7 +247,6 @@
                                 parent.layer.msg('批量上架成功', { icon: 1, shade: 0.4, time: 1000 });
                                 //重载表格
                                 tableIns.reload();
-                                $("#search").click();//重载TABLE
                             }else{
                                 parent.layer.msg("批量上架失败", { icon: 5, shade: [0.4], time: 1000 });
                             }
@@ -284,7 +283,6 @@
                                 parent.layer.msg('批量下架成功', { icon: 1, shade: 0.4, time: 1000 });
                                 //重载表格
                                 tableIns.reload();
-                                $("#search").click();//重载TABLE
                             }else{
                                 parent.layer.msg("批量下架失败", { icon: 5, shade: [0.4], time: 1000 });
                             }
@@ -341,7 +339,7 @@
                             layer.msg('商品价格为必填项', { icon: 5, shade: 0.4, time: 2000 });
                             return
                         }
-                        if($("#categoryType").val()==null || $("#categoryType").val()==""){
+                        if($("#category option:selected").val()==null || $("#category option:selected").val()==""){
                             layer.msg('商品分类为必填项', { icon: 5, shade: 0.4, time: 2000 });
                             return
                         }
@@ -349,7 +347,7 @@
                             if ( res.code==0)
                             {
                                 parent.layer.msg('修改成功', { icon: 1, shade: 0.4, time: 1000 });
-                                $("#search").click();
+                                tableIns.reload();
                                 $("#handle_status").val('');
                                 // $("#productUrl").remove();
 

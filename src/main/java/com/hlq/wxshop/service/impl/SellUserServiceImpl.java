@@ -32,4 +32,8 @@ public class SellUserServiceImpl implements SellUserService{
     }
 
 
+    @Override
+    public SellUser findOne(Integer id) {
+        return sellUserDao.findOne(id);
+    }
 }

@@ -44,6 +44,12 @@ public class IndexController {
         return ResultVOUtil.error(1,"登录失败");
     }
 
+    @GetMapping("/logout")
+    public String logout(HttpSession session){
+        session.removeAttribute("currentUser");
+        return "/index";
+    }
+
     @RequestMapping(value = "/main",method = RequestMethod.GET)
     public String main(){
         return "main";
@@ -87,5 +93,10 @@ public class IndexController {
     @GetMapping("/noticeList")
     public String noticeList(){
         return "notice/noticeList";
+    }
+
+    @GetMapping("/editUser")
+    public String editUser(){
+        return "user/editUser";
     }
 }

@@ -22,11 +22,11 @@
             <a href="javascript:;" th:text="${session.currentUser.username}">Admin</a>
             <dl class="layui-nav-child">
                 <!-- 二级菜单 -->
+                <!--<dd>-->
+                    <!--<a class="app-a-open" id="app-a-user-index" th:_href="@{/user/index.htm}">个人信息</a>-->
+                <!--</dd>-->
                 <dd>
-                    <a class="app-a-open" id="app-a-user-index" th:_href="@{/user/index.htm}">个人信息</a>
-                </dd>
-                <dd>
-                    <a class="loginout" th:href="@{/logout.htm}">退出</a>
+                    <a class="loginout" th:href="@{/pc/logout}">退出</a>
                 </dd>
             </dl>
         </li>
@@ -121,14 +121,14 @@
             <li>
                 <a href="javascript:;">
                     <i class="iconfont">&#xe726;</i>
-                    <cite>管理员管理</cite>
+                    <cite>账号管理</cite>
                     <i class="iconfont nav_right">&#xe697;</i>
                 </a>
                 <ul class="sub-menu">
                     <li>
-                        <a th:_href="@{/user/index.htm}">
+                        <a th:_href="@{/pc/editUser}">
                             <i class="iconfont">&#xe6a7;</i>
-                            <cite>管理员</cite>
+                            <cite>修改账号</cite>
                         </a>
                     </li>
                 </ul>

@@ -61,4 +61,28 @@ public class PCNoticeController {
         ShopNotice shopNotice = noticeService.takeOff(noticeId);
         return ResultVOUtil.success(shopNotice);
     }
+
+    @PostMapping("/save")
+    public ResultVO save(ShopNotice shopNotice){
+        Date date=new Date();
+        shopNotice.setCreateTime(DateFormatUtil.getCurrentTimeBySecond(date));
+        shopNotice.setUpdateTime(DateFormatUtil.getCurrentTimeBySecond(date));
+        ShopNotice save = noticeService.save(shopNotice);
+        return  ResultVOUtil.success(save);
+    }
+
+    @GetMapping("/deleteById")
+    public ResultVO deleteById(Integer noticeId){
+         noticeService.deleteById(noticeId);
+         return  ResultVOUtil.success();
+    }
+
+    @PostMapping("/deleteBatch")
+    public ResultVO deleteBatch(String batchId){
+        String[] str = batchId.split(",");
+        for(String s:str){
+            noticeService.deleteById(Integer.parseInt(s));
+        }
+        return ResultVOUtil.success();
+    }
 }

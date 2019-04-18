@@ -14,7 +14,7 @@
                 <i class="layui-icon"></i>搜索
             </a>
         </div>
-        <div style="float:left;width:230px;height:35px;margin-left: 200px;">
+        <div style="float:left;width:230px;height:35px;margin-left: 290px;">
             <div class="layui-input-inline" style="width:100px;">
                 <a class="layui-btn" id="add" name="add">
                     <i class="layui-icon">&#xe654;</i>添加公告
@@ -47,14 +47,14 @@
         </div>
     </form>
 </div>
-<div id="addForm" style="width: 650px; padding-top: 20px;display:none;">
+<div id="addForm" style="width: 500px; padding-top: 20px;display:none;">
     <form id="addformData" class="layui-form">
         <div class="layui-form-item">
-            <label class="layui-form-label">轮播名称</label>
+            <label class="layui-form-label">公告内容</label>
             <div class="layui-input-block">
-                <input type="text" name="carouselName" id="carouselName2" required
-                       lay-verify="required" placeholder="请输入轮播名称" value=""
-                       class="layui-input" />
+                <textarea type="text" name="noticeContent" id="noticeContent2" required
+                       lay-verify="required" placeholder="请输入公告内容" value=""
+                          class="layui-textarea" ></textarea>
             </div>
         </div>
     </form>
@@ -104,7 +104,7 @@
                         }
                     }
                 }
-                , { field: 'createTime', title: '创建时间', width: 212, align: 'center'}
+                , { field: 'createTime', title: '创建时间', sort:true,width: 212, align: 'center'}
                 ,{title: '操作', fixed: 'right', width: 160, align: 'center', toolbar: '#bar'}
             ]]
             , page: true
@@ -123,17 +123,15 @@
             }
         });
         $("#add").click(function(){
-            $("#carouselName2").val("");
-            $("#carouselImg2").attr("src","");
-            $("#newImg2").html("");
+            $("#noticeContent2").val("");
             layer.open({
                 type: 1,
-                title: '增加轮播图',
+                title: '添加公告',
                 shade: 0.4,  //阴影度
                 fix: false,
                 shadeClose: true,
                 maxmin: false,
-                area: ['700px;', '350px;'],    //窗体大小（宽,高）
+                area: ['600px;', '250px;'],    //窗体大小（宽,高）
                 content: $('#addForm'),
                 success: function (layero, index)
                 {
@@ -143,25 +141,20 @@
                 },
                 btn:['添加','取消'],
                 yes: function(index, layero){
-                    var carouselName=$("#carouselName2").val();
-                    var carouselImg=$("#carouselImg2").val();
-                    if($("#carouselName2").val()==null || $("#carouselName2").val()==""){
-                        layer.msg('轮播图名称为必填项', { icon: 5, shade: 0.4, time: 2000 });
+                    var noticeContent=$("#noticeContent2").val();
+                    if($("#noticeContent2").val()==null || $("#noticeContent2").val()==""){
+                        layer.msg('公告内容为必填项', { icon: 5, shade: 0.4, time: 2000 });
                         return
                     }
-                    if($("#carouselImg2").val()==null || $("#carouselImg2").val()==""){
-                        layer.msg('轮播图片为必填项', { icon: 5, shade: 0.4, time: 2000 });
-                        return
-                    }
-                    $.post(context+'pc/carousel/save',{carouselName:carouselName,carouselImg:carouselImg},function(res){
+                    $.post(context+'pc/notice/save',{noticeContent:noticeContent},function(res){
                         if (res.code == 0)
                         {
-                            parent.layer.msg('添加轮播图成功！', { icon: 1, shade: 0.4, time: 1000 });
+                            parent.layer.msg('添加公告成功！', { icon: 1, shade: 0.4, time: 1000 });
                             tableIns.reload();
                         }
                         else
                         {
-                            parent.layer.msg('添加轮播图失败！', { icon: 5, shade: 0.4, time: 1000 });
+                            parent.layer.msg('添加公告失败！', { icon: 5, shade: 0.4, time: 1000 });
                         }
                         layer.close(index);
                     });
@@ -171,20 +164,20 @@
         //#region --------------批量删除----------------
         $("#delete").click(function ()
         {
-            var checkStatus = table.checkStatus('banner');
+            var checkStatus = table.checkStatus('notice');
             var count = checkStatus.data.length;//选中的行数
             if (count > 0)
             {
-                parent.layer.confirm('确定要删除所选轮播？', { icon: 3 }, function (index)
+                parent.layer.confirm('确定要删除所选公告吗？', { icon: 3 }, function (index)
                 {
                     var data = checkStatus.data; //获取选中行的数据
                     var batchId = '';
                     for (var i = 0; i < data.length; i++)
                     {
-                        batchId += data[i].carouselId + ",";
+                        batchId += data[i].noticeId + ",";
                     }
                     $.ajax({
-                        url: context+'pc/carousel/deleteBatch',
+                        url: context+'pc/notice/deleteBatch',
                         type: "post",
                         data: { 'batchId': batchId },
                         success: function (res){
@@ -289,13 +282,13 @@
                     }
                 });
             }else if(layEvent === 'delete'){
-                layer.confirm('是否删除该轮播？', {
+                layer.confirm('是否删除该公告？', {
                     btn: ['确认', '取消'] //可以无限个按钮
                     ,btn1: function(index, layero){
                         $.ajax({
                             type: "get",
-                            url: context+"pc/carousel/deleteById",
-                            data: "carouselId="+data.carouselId,
+                            url: context+"pc/notice/deleteById",
+                            data: "noticeId="+data.noticeId,
                             success: function(res){
                                 if(res.code==0){
                                     parent.layer.msg('删除成功', { icon: 1, shade: 0.4, time: 1000 });

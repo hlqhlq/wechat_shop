@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>修改账号</title>
+    <head th:include="common/header::html"></head>
+</head>
+
+<body>
+<div id="editForm" style="width: 700px; padding-top: 25px;">
+    <form id="formData" class="layui-form ">
+        <input type="hidden" name="id" id="id" th:value="${session.currentUser.id}"/>
+        <div class="layui-form-item">
+            <label class="layui-form-label">用户名</label>
+            <div class="layui-input-block">
+                <input type="text" name="username" id="username" required
+                       lay-verify="required" placeholder="请输入用户名" th:value="${session.currentUser.username}"
+                       class="layui-input" />
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">密码</label>
+            <div class="layui-input-block">
+                <input type="password" name="password" id="password" required
+                       lay-verify="required" placeholder="请输入密码" value=""
+                       class="layui-input" />
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">确认密码</label>
+            <div class="layui-input-block">
+                <input type="password" name="repassword" id="repassword" required
+                       lay-verify="required" placeholder="请输入确认密码" value=""
+                       class="layui-input" />
+            </div>
+        </div>
+        <div class="layui-form-item" style="margin-left:110px;">
+            <button type="button" lay-submit lay-filter="*" class="layui-btn " style="margin-right:50px;">修改</button>
+            <button type="reset" class="layui-btn layui-btn-warm ">重置</button>
+        </div>
+    </form>
+</div>
+</body>
+<script type="text/javascript" th:inline="none">
+    layui.use(['layer', 'table','form','upload'], function ()
+    {
+        var table = layui.table;
+        var layer = layui.layer;
+        var form =layui.form;
+        var upload=layui.upload;
+        form.on('submit(*)',function(){
+            if($("#password").val()!=$("#repassword").val()){
+                layer.msg("两次输入的密码不一致！请重试！",{icon:5,time:2000});
+                return
+            }
+            $.ajax({
+                type:"post",
+                url:context+"/pc/user/update",
+                data:$("#formData").serialize(),
+                success:function(res){
+                    if(res.code==0){
+                        layer.msg("修改账号成功！下次登陆生效！",{icon:1,time:2000},function(){
+                        });
+                    }else{
+                        layer.msg("修改账号失败！请重试！",{icon:5,time:2000});
+                    }
+                }
+            });
+            return false;
+        });
+    });
+</script>
+</html>

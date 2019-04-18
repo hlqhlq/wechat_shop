@@ -76,7 +76,6 @@ public class ProductInfoController {
                 collect(Collectors.toList());
         List<ProductCategory> productCategoryList = categoryService
                 .findByStatusCategoryTypeIn(CategoryStatusEnum.ON.getCode(),categoryTypeList);
-
         //3. 数据拼装
         List<ProductVO> productVOList = new ArrayList<>();
         for(ProductCategory category:productCategoryList){
@@ -84,15 +83,20 @@ public class ProductInfoController {
             productVO.setCategoryName(category.getCategoryName());
             productVO.setCategoryType(category.getCategoryType());
             productVO.setCategoryIco(category.getCategoryIco());
-
+            Integer limit=0;
             List<ProductInfoVO> productInfoVOList = new ArrayList<>();
             for(ProductInfo productInfo:productList){
                 //判断分类是否相等
-                 if(productInfo.getCategoryType().equals(category.getCategoryType())){
-                     ProductInfoVO productInfoVO = new ProductInfoVO();
-                     BeanUtils.copyProperties(productInfo,productInfoVO);
-                     productInfoVOList.add(productInfoVO);
-                 }
+                if(productInfo.getCategoryType().equals(category.getCategoryType())){
+                    limit=limit+1;
+                    //每个分类只显示前6个商品
+                    if(limit<7){
+                        ProductInfoVO productInfoVO = new ProductInfoVO();
+                        BeanUtils.copyProperties(productInfo,productInfoVO);
+                        productInfoVOList.add(productInfoVO);
+                    }
+
+                }
             }
             productVO.setProductInfoVOList(productInfoVOList);
             productVOList.add(productVO);
