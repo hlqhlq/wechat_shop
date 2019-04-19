@@ -245,7 +245,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Integer countDaifahuo(Integer order_status, Integer pay_status) {
+    public Integer countByOrderStatusAndPayStatus(Integer order_status, Integer pay_status) {
         return orderMasterDao.countByOrderStatusAndPayStatus(order_status,pay_status);
     }
 

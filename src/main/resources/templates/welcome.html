@@ -66,13 +66,13 @@
             xAxis: {
                 data: [],
                 axisLabel:{
-                    interval:0//横轴信息全部显示
+                    interval:2//横轴信息全部显示
                 }
             },
             yAxis: {},
             series: [{
                 type: 'bar',
-                data: []
+                data: [],
             }]
         });
         orderChart.setOption({
@@ -144,7 +144,11 @@
             legend: {
                 orient: 'vertical',
                 x: 'left',
-                data: []
+                data: [],
+                textStyle:{
+                    fontSize:8
+                }
+
             },
             toolbox: {
                 show: true,
@@ -170,7 +174,12 @@
                 name:"浏览量",
                 radius: '55%',
                 center: ['50%', '60%'],
-                data: []
+                data: [],
+                label:{
+                    textStyle:{
+                        fontSize:8
+                    }
+				}
             }]
         });
         myChart.showLoading();

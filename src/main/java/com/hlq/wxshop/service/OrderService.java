@@ -77,7 +77,7 @@ public interface OrderService {
      * @param pay_status
      * @return
      */
-   Integer countDaifahuo(Integer order_status,Integer pay_status);
+   Integer countByOrderStatusAndPayStatus(Integer order_status,Integer pay_status);
 
     /**
      * 根据订单月份分组返回订单数量以及总销售额

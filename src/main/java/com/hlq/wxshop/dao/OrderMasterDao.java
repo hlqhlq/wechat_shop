@@ -59,11 +59,11 @@ public interface OrderMasterDao extends JpaRepository<OrderMaster,String> {
 
 
     /**
-     * 只展示3个月的
+     * 只展示3个月的已完结订单
      * 根据订单月份分组返回订单数量以及总销售额
      * @return
      */
-    @Query(nativeQuery =true,value="select sum(order_amount) as totalMoney,month,count(order_id) as orderNum from order_master where order_status=3  group by month order by month asc limit ?1")
+    @Query(nativeQuery =true,value="select sum(order_amount) as totalMoney,month,count(order_id) as orderNum from order_master where order_status=1  group by month order by month asc limit ?1")
     List<Object[]> findTotalMoneyByMonth(Integer limit);
 
     /**

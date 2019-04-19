@@ -1,8 +1,11 @@
 package com.hlq.wxshop.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hlq.wxshop.VO.OrderVO;
 import com.hlq.wxshop.VO.ResultVO;
 import com.hlq.wxshop.dto.OrderDTO;
+import com.hlq.wxshop.enums.OrderStatusEnum;
+import com.hlq.wxshop.enums.PayStatusEnum;
 import com.hlq.wxshop.service.OrderService;
 import com.hlq.wxshop.utils.ResultVOUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,5 +81,24 @@ public class OrderController {
 
     }
 
+
+    /**
+     * 查询各个状态的订单数量
+     * @return
+     */
+    @GetMapping("/countOrder")
+    public ResultVO countOrder(){
+        Integer daifukuan = orderService.countByOrderStatusAndPayStatus(OrderStatusEnum.NEW.getCode(), PayStatusEnum.WAIT.getCode());
+        Integer daifahuo= orderService.countByOrderStatusAndPayStatus(OrderStatusEnum.NEW.getCode(), PayStatusEnum.SUCCESS.getCode());
+        Integer daishouhuo= orderService.countByOrderStatusAndPayStatus(OrderStatusEnum.DELIVERY.getCode(), PayStatusEnum.SUCCESS.getCode());
+        Integer finish= orderService.countByOrderStatusAndPayStatus(OrderStatusEnum.FINISHED.getCode(), PayStatusEnum.SUCCESS.getCode());
+        JSONObject obj=new JSONObject();
+        obj.put("daifukuan",daifukuan);
+        obj.put("daifahuo",daifahuo);
+        obj.put("daishouhuo",daishouhuo);
+        obj.put("finish",finish);
+        return ResultVOUtil.success(obj);
+
+    }
 
 }

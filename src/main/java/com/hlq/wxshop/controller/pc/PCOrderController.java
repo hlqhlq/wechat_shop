@@ -42,7 +42,7 @@ public class PCOrderController {
     @GetMapping("/orderCount")
     public ResultVO count(){
         Integer countAll = orderService.countOrder();
-        Integer daifahuo = orderService.countDaifahuo(OrderStatusEnum.NEW.getCode(), PayStatusEnum.SUCCESS.getCode());
+        Integer daifahuo = orderService.countByOrderStatusAndPayStatus(OrderStatusEnum.NEW.getCode(), PayStatusEnum.SUCCESS.getCode());
         HashMap<String, Integer> map = new HashMap<>();
         map.put("countAll",countAll);
         map.put("daifahuo",daifahuo);
