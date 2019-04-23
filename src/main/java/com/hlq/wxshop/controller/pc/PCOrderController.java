@@ -109,5 +109,9 @@ public class PCOrderController {
         return ResultVOUtil.success(update);
     }
 
-
+    @GetMapping("/finish")
+    public ResultVO finish(String orderId){
+        OrderMaster finish = orderService.finish(orderId);
+        return ResultVOUtil.success(finish);
+    }
 }

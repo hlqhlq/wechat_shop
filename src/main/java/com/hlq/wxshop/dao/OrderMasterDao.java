@@ -33,7 +33,8 @@ public interface OrderMasterDao extends JpaRepository<OrderMaster,String> {
      * @param payStatus
      * @return
      */
-    List<OrderMaster> findByBuyerOpenidAndAndOrderStatusAndAndPayStatus(String buyerOpenid, Integer orderStatus,Integer payStatus);
+    @Query(nativeQuery = true,value = "select * from order_master where buyer_openid=?1 and order_status=?2 and pay_status=?3 and (del_status=?4 or ?4 is null)order by create_time desc")
+    List<OrderMaster> findByBuyerOpenidAndAndOrderStatusAndAndPayStatus(String buyerOpenid, Integer orderStatus,Integer payStatus,Integer delStatus);
 
     /**
      * 根据买家openid查询订单
@@ -57,7 +58,14 @@ public interface OrderMasterDao extends JpaRepository<OrderMaster,String> {
      */
     Integer countByOrderStatusAndPayStatus(Integer order_status,Integer pay_status);
 
-
+    /**
+     * 查询已完成的订单并且用户没有删除的
+     * @param order_status
+     * @param pay_status
+     * @param delStatus
+     * @return
+     */
+    Integer countByOrderStatusAndPayStatusAndAndDelStatus(Integer order_status,Integer pay_status,Integer delStatus);
     /**
      * 只展示3个月的已完结订单
      * 根据订单月份分组返回订单数量以及总销售额

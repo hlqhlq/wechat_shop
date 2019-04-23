@@ -1,5 +1,6 @@
 package com.hlq.wxshop.model;
 
+import com.hlq.wxshop.enums.DelStatusEnum;
 import com.hlq.wxshop.enums.OrderStatusEnum;
 import com.hlq.wxshop.enums.PayStatusEnum;
 import lombok.Data;
@@ -39,6 +40,11 @@ public class OrderMaster {
 
     /** 支付状态, 默认为0未支付. */
     private Integer payStatus = PayStatusEnum.WAIT.getCode();
+
+    /**
+     * 删除状态
+     */
+    private Integer delStatus= DelStatusEnum.FORMAL.getCode();
 
     /**
      * 月份

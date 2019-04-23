@@ -4,8 +4,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.hlq.wxshop.VO.OrderVO;
 import com.hlq.wxshop.VO.ResultVO;
 import com.hlq.wxshop.dto.OrderDTO;
+import com.hlq.wxshop.enums.DelStatusEnum;
 import com.hlq.wxshop.enums.OrderStatusEnum;
 import com.hlq.wxshop.enums.PayStatusEnum;
+import com.hlq.wxshop.model.OrderMaster;
 import com.hlq.wxshop.service.OrderService;
 import com.hlq.wxshop.utils.ResultVOUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,16 +41,16 @@ public class OrderController {
     }
 
     /**
-     * 根基订单状态、支付状态查询未付款的订单
+     * 根基订单状态、支付状态查询订单
      * @param openid
      * @param orderStatus
      * @param payStatus
      * @return
      */
     @GetMapping("/findByPayStatus")
-    public ResultVO findByPayStatus(String openid,Integer orderStatus,Integer payStatus){
+    public ResultVO findByPayStatus(String openid,Integer orderStatus,Integer payStatus,Integer delStatus){
         List<OrderDTO> list = orderService
-                .findByBuyerOpenidAndAndOrderStatusAndAndPayStatus(openid,orderStatus,payStatus);
+                .findByBuyerOpenidAndAndOrderStatusAndAndPayStatus(openid,orderStatus,payStatus,delStatus);
         return ResultVOUtil.success(list);
     }
 
@@ -91,14 +93,24 @@ public class OrderController {
         Integer daifukuan = orderService.countByOrderStatusAndPayStatus(OrderStatusEnum.NEW.getCode(), PayStatusEnum.WAIT.getCode());
         Integer daifahuo= orderService.countByOrderStatusAndPayStatus(OrderStatusEnum.NEW.getCode(), PayStatusEnum.SUCCESS.getCode());
         Integer daishouhuo= orderService.countByOrderStatusAndPayStatus(OrderStatusEnum.DELIVERY.getCode(), PayStatusEnum.SUCCESS.getCode());
-        Integer finish= orderService.countByOrderStatusAndPayStatus(OrderStatusEnum.FINISHED.getCode(), PayStatusEnum.SUCCESS.getCode());
+        Integer daipingjia=orderService.countByOrderStatusAndPayStatusAndAndDelStatus(OrderStatusEnum.RECEIVED.getCode(),
+                PayStatusEnum.SUCCESS.getCode(),DelStatusEnum.FORMAL.getCode());
+        Integer finish= orderService.countByOrderStatusAndPayStatusAndAndDelStatus(OrderStatusEnum.FINISHED.getCode(),
+                PayStatusEnum.SUCCESS.getCode(), DelStatusEnum.FORMAL.getCode());
         JSONObject obj=new JSONObject();
         obj.put("daifukuan",daifukuan);
         obj.put("daifahuo",daifahuo);
         obj.put("daishouhuo",daishouhuo);
+        obj.put("daipingjia",daipingjia);
         obj.put("finish",finish);
         return ResultVOUtil.success(obj);
 
+    }
+
+    @GetMapping("/delete")
+    public ResultVO delete(String orderId){
+        OrderMaster orderMaster = orderService.delete(orderId);
+        return ResultVOUtil.success(orderMaster);
     }
 
 }

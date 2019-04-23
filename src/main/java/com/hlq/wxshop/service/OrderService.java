@@ -35,7 +35,7 @@ public interface OrderService {
      * @param
      * @return
      */
-   List<OrderDTO> findByBuyerOpenidAndAndOrderStatusAndAndPayStatus(String buyerOpenid,Integer orderStatus,Integer payStatus);
+   List<OrderDTO> findByBuyerOpenidAndAndOrderStatusAndAndPayStatus(String buyerOpenid,Integer orderStatus,Integer payStatus,Integer delStatus);
     /**
      * 查询订单列表
      * @param buyerOpenid
@@ -121,4 +121,24 @@ public interface OrderService {
      */
    OrderMaster update(OrderMaster orderMaster);
 
+    /**
+     * 完结订单
+     * @param orderId
+     * @return
+     */
+   OrderMaster finish(String orderId);
+
+    /**
+     *
+     * @param orderStatus
+     * @param payStatus
+     * @param delStatus
+     * @return
+     */
+   Integer countByOrderStatusAndPayStatusAndAndDelStatus(Integer orderStatus,Integer payStatus,Integer delStatus);
+
+    /**
+     * 删除订单，把删除状态改为1
+     */
+    OrderMaster delete(String orderId);
 }

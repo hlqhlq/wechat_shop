@@ -19,6 +19,7 @@
                 <option value="">请选择订单状态</option>
                 <option value="0">新订单</option>
                 <option value="3">已发货</option>
+                <option value="4">已收货</option>
                 <option value="1">完结</option>
                 <option value="2">已取消</option>
             </select>
@@ -95,6 +96,8 @@
     <a class="layui-btn layui-btn-xs layui-btn-danger" title="取消" lay-event="cancel">取消</a>
     {{#  }if(d.orderStatus==0 && d.payStatus==0){  }}
     <a class="layui-btn layui-btn-xs layui-btn-danger" title="取消" lay-event="cancel">取消</a>
+    {{#  }if(d.orderStatus==4 && d.payStatus==1){  }}
+    <a class="layui-btn layui-btn-xs layui-btn-warm" title="完结" lay-event="finish">完结</a>
     {{#  }
     }}
 
@@ -268,18 +271,38 @@
                     }
                 });
             }else if(layEvent === 'delivery'){
-                layer.confirm('是否发货该订单？', {
+                    layer.confirm('是否发货该订单？', {
+                        btn: ['确认', '取消'] //可以无限个按钮
+                        ,btn1: function(index, layero){
+                            $.ajax({
+                                type: "get",
+                                url: context+"pc/order/delivery",
+                                data: "orderId="+data.orderId,
+                                success: function(res){
+                                    if(res.code==0){
+                                        parent.layer.msg('发货成功', { icon: 1, shade: 0.4, time: 1000 });
+                                    }else{
+                                        parent.layer.msg('发货失败', { icon: 5, shade: 0.4, time: 1000 });
+                                    }
+                                }
+                            });
+                            layer.close(index);
+                            tableIns.reload();
+                        }
+                    });
+            }else if(layEvent === 'finish') {
+                layer.confirm('是否完结该订单？', {
                     btn: ['确认', '取消'] //可以无限个按钮
-                    ,btn1: function(index, layero){
+                    , btn1: function (index, layero) {
                         $.ajax({
                             type: "get",
-                            url: context+"pc/order/delivery",
-                            data: "orderId="+data.orderId,
-                            success: function(res){
-                                if(res.code==0){
-                                    parent.layer.msg('发货成功', { icon: 1, shade: 0.4, time: 1000 });
-                                }else{
-                                    parent.layer.msg('发货失败', { icon: 5, shade: 0.4, time: 1000 });
+                            url: context + "pc/order/finish",
+                            data: "orderId=" + data.orderId,
+                            success: function (res) {
+                                if (res.code == 0) {
+                                    parent.layer.msg('操作成功', {icon: 1, shade: 0.4, time: 1000});
+                                } else {
+                                    parent.layer.msg('操作失败', {icon: 5, shade: 0.4, time: 1000});
                                 }
                             }
                         });
@@ -404,6 +427,8 @@
     <span style="color: #5FB878;font-weight:bold">新订单</span>
     {{#  }else if(d.orderStatus===3){ }}
     <span style="color: #2F4056;font-weight:bold">已发货</span>
+    {{#  }else if(d.orderStatus===4){ }}
+    <span style="color: #C71585;font-weight:bold">已收货</span>
     {{#  }else if(d.orderStatus===1){ }}
     <span style="color: #FFB800;font-weight:bold">完结</span>
     {{#  }else if(d.orderStatus===2){ }}
@@ -414,7 +439,7 @@
 <script type="text/html" id="payStatus">
     {{#
     if (d.payStatus===0) { }}
-    <span style="color: #1E9FFF;font-weight:bold">等待支付</span>
+    <span style="color: #FF0000;font-weight:bold">等待支付</span>
     {{#  }else if(d.payStatus===1){ }}
     <span style="color: #009688;font-weight:bold">支付成功</span>
     {{#  }

@@ -7,6 +7,7 @@ import com.hlq.wxshop.dao.OrderDetailDao;
 import com.hlq.wxshop.dao.OrderMasterDao;
 import com.hlq.wxshop.dto.CartDTO;
 import com.hlq.wxshop.dto.OrderDTO;
+import com.hlq.wxshop.enums.DelStatusEnum;
 import com.hlq.wxshop.enums.OrderStatusEnum;
 import com.hlq.wxshop.enums.PayStatusEnum;
 import com.hlq.wxshop.enums.ResultEnum;
@@ -250,10 +251,10 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OrderDTO> findByBuyerOpenidAndAndOrderStatusAndAndPayStatus(String buyerOpenid,Integer orderStatus,Integer payStatus) {
+    public List<OrderDTO> findByBuyerOpenidAndAndOrderStatusAndAndPayStatus(String buyerOpenid,Integer orderStatus,Integer payStatus,Integer delStatus) {
 
         List<OrderMaster>  orderMasterList= orderMasterDao
-                .findByBuyerOpenidAndAndOrderStatusAndAndPayStatus(buyerOpenid,orderStatus,payStatus);
+                .findByBuyerOpenidAndAndOrderStatusAndAndPayStatus(buyerOpenid,orderStatus,payStatus,delStatus);
         List<OrderDTO> list=new ArrayList<>();
         for(OrderMaster orderMaster:orderMasterList){
             List<OrderDetail> orderDetailList =
@@ -329,6 +330,29 @@ public class OrderServiceImpl implements OrderService {
         one.setBuyerPostcode(orderMaster.getBuyerPostcode());
         one.setUpdateTime(DateFormatUtil.getCurrentTimeBySecond(new Date()));
         OrderMaster save = orderMasterDao.save(one);
+        return save;
+    }
+
+    @Override
+    public OrderMaster finish(String orderId) {
+        OrderMaster order = orderMasterDao.findOne(orderId);
+        order.setOrderStatus(OrderStatusEnum.FINISHED.getCode());
+        order.setUpdateTime(DateFormatUtil.getCurrentTimeBySecond(new Date()));
+        OrderMaster save = orderMasterDao.save(order);
+        return save;
+    }
+
+    @Override
+    public Integer countByOrderStatusAndPayStatusAndAndDelStatus(Integer orderStatus, Integer payStatus, Integer delStatus) {
+        return orderMasterDao.countByOrderStatusAndPayStatusAndAndDelStatus(orderStatus,payStatus,delStatus);
+    }
+
+    @Override
+    public OrderMaster delete(String orderId) {
+        OrderMaster order = orderMasterDao.findOne(orderId);
+        order.setDelStatus(DelStatusEnum.DELETE.getCode());
+        order.setUpdateTime(DateFormatUtil.getCurrentTimeBySecond(new Date()));
+        OrderMaster save = orderMasterDao.save(order);
         return save;
     }
 }

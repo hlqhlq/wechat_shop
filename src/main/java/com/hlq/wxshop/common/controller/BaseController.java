@@ -30,6 +30,8 @@ public abstract  class BaseController {
 //        return String.format("%s://%s:%s%s", request.getScheme(),request.getServerName(),request.getServerPort(),request.getContextPath());
         //小程序要局域网才嗯那个访问
         System.out.println(HostIpUtil.getLANAddressOnWindows());
-        return String.format("%s://%s:%s%s", request.getScheme(),HostIpUtil.getLANAddressOnWindows(),request.getServerPort(),request.getContextPath());
+        System.out.println(HostIpUtil.getHostIp());
+        System.out.println(request.getServerName());
+        return String.format("%s://%s:%s%s", request.getScheme(),request.getServerName(),request.getServerPort(),request.getContextPath());
     }
 }

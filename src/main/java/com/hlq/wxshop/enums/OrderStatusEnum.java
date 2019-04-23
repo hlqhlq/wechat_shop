@@ -14,6 +14,7 @@ public enum OrderStatusEnum implements CodeEnum{
     FINISHED(1,"完结"),
     CANCEL(2,"已取消"),
     DELIVERY(3,"已发货"),
+    RECEIVED(4,"已收货")
     ;
     private Integer code;
     private String message;
