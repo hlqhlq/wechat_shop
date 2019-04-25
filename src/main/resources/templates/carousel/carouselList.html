@@ -6,16 +6,19 @@
 </head>
 <body>
 <form class="layui-form">
-    <div class="layui-form-item" style="margin-left:45px;margin-bottom:20px;margin-top:20px;height:30px;">
-        <div style="height:40px;width:80px;float:left;line-height:40px;">轮播图名称:</div>
-        <input type="text" class="layui-input" style="width:200px;float:left;" id="keyword" name="carouselName" value="" lay-verify="" placeholder="请输入轮播图名称" autocomplete="off">
-        <div class="layui-input-inline" style="width:150px;text-align:center;">
+    <div class="layui-form-item" style="margin-left:20px;margin-bottom:20px;margin-top:20px;height:30px;">
+        <!--<div style="height:40px;width:80px;float:left;line-height:40px;">轮播图名称:</div>-->
+        <!--<input type="text" class="layui-input" style="width:200px;float:left;" id="keyword" name="carouselName" value="" lay-verify="" placeholder="请输入轮播图名称" autocomplete="off">-->
+        <div class="layui-input-inline" style="width:150px;">
+            <input type="text" class="layui-input" id="keyword" name="carouselName" value="" lay-verify="" placeholder="请输入轮播图名称" autocomplete="off">
+        </div>
+        <div class="layui-input-inline" style="width:90px;text-align:center;">
             <a class="layui-btn" id="search" data-type="reload" name="search">
                 <i class="layui-icon"></i>搜索
             </a>
         </div>
-        <div style="float:left;width:230px;height:35px;margin-left: 200px;">
-            <div class="layui-input-inline" style="width:100px;">
+        <div  class="layui-input-inline" style="width:220px;height:30px;">
+            <div class="layui-input-inline" style="width:100px;margin-right:10px;">
                 <a class="layui-btn" id="add" name="add">
                     <i class="layui-icon">&#xe654;</i>添加轮播
                 </a>
@@ -295,6 +298,7 @@
             var tr = obj.tr; //获得当前行 tr 的DOM对象
             if (layEvent === 'edit')
             { //编辑
+                $("#newImg").empty();
                 layer.open({
                     type: 1,
                     title: '编辑轮播图信息',

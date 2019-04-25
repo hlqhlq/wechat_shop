@@ -306,6 +306,9 @@
             var productId = data.productId;
             if (layEvent === 'edit')
             { //编辑
+                console.log(11111111)
+                console.log($("#newImg"))
+                $("#newImg").empty();
                 layer.open({
                     type: 1,
                     title: '编辑商品信息',
@@ -317,8 +320,8 @@
                     content: $('#editForm'),
                     success: function (layero, index)
                     {
+                        $("#newImg").html("");
                         var body = layer.getChildFrame('body', index); //得到子页面层的BODY
-                        // $("#productUrlInput").append('<input type="hidden" name="productImg" id="productUrl" value=""/>');
                         $("#productId").val(data.productId);
                         $("#productName").val(data.productName);
                         $("#productPrice").val(data.productPrice);
@@ -349,7 +352,6 @@
                                 parent.layer.msg('修改成功', { icon: 1, shade: 0.4, time: 1000 });
                                 tableIns.reload();
                                 $("#handle_status").val('');
-                                // $("#productUrl").remove();
 
                             }
                             else
@@ -359,7 +361,11 @@
                             $("#newImg").html("");
                             layer.close(index);
                         });
-                    }
+                    },
+                    // cancel:function(index,layero){
+                    //     $("#newImg").html("");
+                    //     return false;
+                    // }
 
 
                 });

@@ -6,16 +6,19 @@
 </head>
 <body>
 <form class="layui-form">
-    <div class="layui-form-item" style="margin:15px;height:30px;">
-        <div style="height:40px;width:60px;float:left;line-height:40px;">类目名称:</div>
-        <input type="text" class="layui-input" style="display:inline-block;width:250px;float:left;" id="keyword" name="categoryName" value="" lay-verify="" placeholder="请输入分类名" autocomplete="off">
-        <div class="layui-input-inline" style="width:150px;text-align:center;">
+    <div class="layui-form-item" style="margin:15px 15px;height:30px;">
+        <!--<div style="height:40px;width:60px;float:left;line-height:40px;">类目名称:</div>-->
+        <!--<input type="text" class="layui-input" style="display:inline-block;width:250px;" id="keyword" name="categoryName" value="" lay-verify="" placeholder="请输入分类名" autocomplete="off">-->
+        <div class="layui-input-inline" style="width:120px;">
+            <input type="text" class="layui-input"  id="keyword" name="categoryName" value="" lay-verify="" placeholder="请输入类目名称" autocomplete="off">
+        </div>
+        <div class="layui-input-inline" style="width:100px;text-align:center;">
             <a class="layui-btn" id="search" data-type="reload" name="search">
                 <i class="layui-icon"></i>搜索
             </a>
         </div>
-        <div style="float:right;width:400px;height:40px;">
-            <div class="layui-input-inline" style="width:100px;margin-right:20px;">
+        <div  class="layui-input-inline" style="width:100px;height:30px;">
+            <div class="layui-input-inline" style="width:100px;margin-right:10px;">
                 <a class="layui-btn layui-btn-normal" id="add" name="add">
                     <i class="layui-icon">&#xe654;</i>添加分类
                 </a>
@@ -281,6 +284,7 @@
             var tr = obj.tr; //获得当前行 tr 的DOM对象
             if (layEvent === 'edit')
             { //编辑
+                $("#newImg").empty();
                 layer.open({
                     type: 1,
                     title: '编辑商品分类信息',
@@ -320,7 +324,7 @@
                             $("#newImg").html("");
                             layer.close(index);
                         });
-                    }
+                    },
                 });
             }else if(layEvent === 'delete'){
                 layer.confirm('是否删除该分类？', {

@@ -6,15 +6,18 @@
 </head>
 <body>
 <form class="layui-form">
-    <div class="layui-form-item" style="margin-left:45px;margin-bottom:20px;margin-top:20px;height:30px;">
-        <div style="height:40px;width:40px;float:left;line-height:40px;">公告:</div>
-        <input type="text" class="layui-input" style="width:200px;float:left;" id="keyword" name="noticeContent" value="" lay-verify="" placeholder="请输入公告内容" autocomplete="off">
-        <div class="layui-input-inline" style="width:150px;text-align:center;">
+    <div class="layui-form-item" style="margin-left:20px;margin-bottom:20px;margin-top:20px;height:30px;">
+        <!--<div style="height:40px;width:40px;float:left;line-height:40px;">公告:</div>-->
+        <!--<input type="text" class="layui-input" style="width:200px;float:left;" id="keyword" name="noticeContent" value="" lay-verify="" placeholder="请输入公告内容" autocomplete="off">-->
+        <div class="layui-input-inline" style="width:150px;">
+            <input type="text" class="layui-input"  id="keyword" name="noticeContent" value="" lay-verify="" placeholder="请输入公告内容" autocomplete="off">
+        </div>
+        <div class="layui-input-inline" style="width:100px;text-align:center;">
             <a class="layui-btn" id="search" data-type="reload" name="search">
                 <i class="layui-icon"></i>搜索
             </a>
         </div>
-        <div style="float:left;width:230px;height:35px;margin-left: 290px;">
+        <div class="layui-input-inline" style="width:230px;height:35px;">
             <div class="layui-input-inline" style="width:100px;">
                 <a class="layui-btn" id="add" name="add">
                     <i class="layui-icon">&#xe654;</i>添加公告
