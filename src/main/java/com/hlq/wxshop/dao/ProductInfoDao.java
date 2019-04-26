@@ -57,7 +57,7 @@ public interface ProductInfoDao extends JpaRepository<ProductInfo,String> {
      */
     @Query(nativeQuery = true,value = "select * from product_info p where(p.product_id like CONCAT('%',?1,'%') or ?1 is null)"+
     "and (p.product_name like CONCAT('%',?2,'%') or ?2 is null)"+
-    "and (p.category_type= ?3 or ?3 is null) order by ?#{#pageable}")
+    "and (p.category_type= ?3 or ?3 is null) order by p.create_time desc,?#{#pageable}")
     Page<ProductInfo> searchByKey(String productId, String productName, Integer categoryType, Pageable pageable);
 
 

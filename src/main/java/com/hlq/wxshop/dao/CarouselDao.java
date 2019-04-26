@@ -22,7 +22,7 @@ public interface CarouselDao extends JpaRepository<CarouselAd,Integer> {
      * @param pageable
      * @return
      */
-    @Query(nativeQuery = true,value = "select * from carousel_ad where (carousel_name like CONCAT('%',?1,'%') or ?1 is null)order by ?#{#pageable}")
+    @Query(nativeQuery = true,value = "select * from carousel_ad where (carousel_name like CONCAT('%',?1,'%') or ?1 is null)order by create_time desc,?#{#pageable}")
     Page<CarouselAd> findAllBySplitePage(String carouselName,Pageable pageable);
 
     /**
@@ -39,6 +39,6 @@ public interface CarouselDao extends JpaRepository<CarouselAd,Integer> {
      * @param pageable
      * @return
      */
-    @Query(nativeQuery = true,value = "select * from  carousel_ad where ( carousel_name like CONCAT('%',?1,'%') or ?1 is null)order by ?#{#pageable}")
+    @Query(nativeQuery = true,value = "select * from  carousel_ad where ( carousel_name like CONCAT('%',?1,'%') or ?1 is null)order by create_time desc,?#{#pageable}")
     Page<CarouselAd> searchByCarouselName(String carouselName, Pageable pageable);
 }

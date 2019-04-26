@@ -44,13 +44,13 @@
                 </a>
                 <ul class="sub-menu">
                     <li>
-                        <a th:_href="@{/pc/goodsList}">
+                        <a th:_href="@{/pc/goodsList}" id="goodsList">
                             <i class="iconfont">&#xe6a7;</i>
                             <cite>查看商品</cite>
                         </a>
                     </li>
                     <li>
-                        <a th:_href="@{/pc/addGoods}">
+                        <a th:_href="@{/pc/addGoods}" id="addGoods">
                             <i class="iconfont">&#xe6a7;</i>
                             <cite>添加商品</cite>
                         </a>
@@ -161,6 +161,10 @@
     //     });
     //
     // });
+
+    // $("#goodsList").click(function () {
+    //     window.location.reload();
+    // })
 
 
 </script>

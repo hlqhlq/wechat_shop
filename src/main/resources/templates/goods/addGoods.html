@@ -27,7 +27,7 @@
             <label class="layui-form-label">商品价格</label>
             <div class="layui-input-block">
                 <input type="text" name="productPrice" id="productPrice" required
-                       lay-verify="required" placeholder="请输入商品价格" value=""
+                       lay-verify="price" placeholder="请输入商品价格" value=""
                        class="layui-input" />
             </div>
         </div>
@@ -35,7 +35,7 @@
             <label class="layui-form-label">商品库存</label>
             <div class="layui-input-block">
                 <input type="text" name="productStock" id="productStock" required
-                       lay-verify="required" placeholder="请输入商品库存" value=""
+                       lay-verify="stock" placeholder="请输入商品库存" value=""
                        class="layui-input" />
             </div>
         </div>
@@ -71,8 +71,9 @@
 </div>
 </body>
 <script type="text/javascript" th:inline="none">
-        layui.use(['layer', 'table','form','upload'], function ()
+        layui.use(['layer', 'table','form','upload','element'], function ()
         {
+            var element=layui.element;
             var table = layui.table;
             var layer = layui.layer;
             var form =layui.form;
@@ -82,24 +83,49 @@
                 ,url: context+'/pc/upload/uploadImg' //上传接口
                 ,done: function(res){
                     layer.msg("上传图片成功！",{icon:1,time:2000});
-                    var str="<img style='width:280px;height:160px;' src='"+res.src+"' /><input type='hidden' value='"+res.src+"' name='productImg' />"
+                    var str="<img style='width:280px;height:160px;' src='"+res.src+"' /><input type='hidden' value='"+res.src+"' name='productImg' id='productImg'/>"
                     $("#newImg").html(str);
                 }
                 ,error: function(){
                     layer.msg("上传图片失败！请重试！",{icon:5,time:2000});
                 }
             });
+            //自定义验证规则
+            form.verify({
+                price:[
+                    /^[0-9]+(.[0-9]{2})?$/
+                    ,'商品价格必须为两位小数的正实数'
+                ],
+                stock:[
+                    /^\+?[1-9][0-9]*$/
+                    ,'商品库存必须为正整数'
+                ]
+            })
             form.on('submit(*)',function(){
+                if($("#productImg").val()==null || $("#productImg").val()==""){
+                    layer.msg('商品图片为必填项', { icon: 5, shade: 0.4, time: 2000 });
+                    return
+                }
                 $.ajax({
                     type:"post",
                     url:context+"/pc/product/save",
                     data:$("#formData").serialize(),
                     success:function(res){
                         if(res.code==0){
+
                             layer.msg("添加商品成功！",{icon:1,time:2000},function(){
-                                window.location.href=context+"/pc/goodsList";
-                                // $.get(context+"/pc/goodsList")
+                                // console.log( window.parent.document)
+                                $("#formData")[0].reset();
+                                $("#newImg").html("");
+                                //跳转到查看商品页面
+                                // window.parent.document.getElementById("add").click();
                                 // window.open(context+"/pc/goodsList");
+                               // window.parent.document.getElementsByClassName("layui-this")[0].innerHTML='查看商品';
+                               // window.location.href=context+"/pc/goodsList";
+                                // window.parent.document.getElementById("addGoods").style.display="none"
+                                // element.tabDelete('wenav_tab','3');
+                                window.parent.document.getElementById("goodsList").click();
+
                             });
                         }else{
                             layer.msg("添加商品失败！请重试！",{icon:5,time:2000});

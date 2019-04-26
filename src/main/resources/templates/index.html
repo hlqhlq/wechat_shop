@@ -24,5 +24,16 @@
         <button class="layui-btn layui-block" lay-filter="login" lay-submit>登录</button>
     </div>
 </form>
+<script type="text/javascript" th:inline="none">
+    $(document).ready(function () {
+
+        //刷新一次页面而且仅刷新一次
+        if(location.href.indexOf("#reloaded")==-1){
+            location.href=location.href+"#reloaded";
+            location.reload();
+        }
+    })
+
+</script>
 </body>
 </html>

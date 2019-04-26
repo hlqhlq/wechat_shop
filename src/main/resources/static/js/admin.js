@@ -149,6 +149,9 @@ layui.define(['jquery', 'form', 'layer', 'element'], function(exports) {
 
 			for(var i = 0; i < $('.weIframe').length; i++) {
 				if($('.weIframe').eq(i).attr('tab-id') == index + 1) {
+                    // $('.weIframe').eq(i).src=url;
+					// console.log(1017)
+                    $('.weIframe').eq(i).attr('src', url);//點擊左側菜單都重新加載
 					tab.tabChange(index + 1);
 					event.stopPropagation();
 					return;
